@@ -22,24 +22,27 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: StreamBuilder<UserResponse>(
-          stream: authBloc.subject.stream,
-          builder: (context, AsyncSnapshot<UserResponse> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
+    return WillPopScope(
+      onWillPop: () async {return false;},
+      child: SafeArea(
+          child: StreamBuilder<UserResponse>(
+            stream: authBloc.subject.stream,
+            builder: (context, AsyncSnapshot<UserResponse> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data.error != null &&
+                    snapshot.data.error.length > 0) {
+                  return AuthScreen();
+                }
+                print("Container");
+                return ProfileScreen();
+              } else if (snapshot.hasError) {
                 return AuthScreen();
+              } else {
+                return buildLoadingWidget();
               }
-              print("Container");
-              return ProfileScreen();
-            } else if (snapshot.hasError) {
-              return AuthScreen();
-            } else {
-              return buildLoadingWidget();
-            }
-          },
-        )
+            },
+          )
+      ),
     );
   }
 

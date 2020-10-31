@@ -30,9 +30,15 @@ final kProfileTextStyle = TextStyle(
   fontSize: 18,
   fontFamily: 'OpenSans',
 );
+final kAppBarTextStyle = TextStyle(
+  color: Style.Colors.titleColor,
+  fontWeight: FontWeight.normal,
+  fontSize: 18,
+  fontFamily: 'OpenSans',
+);
 final kDataTextStyle = TextStyle(
   color: Style.Colors.standardTextColor,
-  //fontWeight: FontWeight.normal,
+  //
   fontSize: 16,
   fontFamily: 'OpenSans',
 );
@@ -48,6 +54,11 @@ final kSpanTextStyle = TextStyle(
   fontSize: 12,
   fontFamily: 'OpenSans',
 );
+final kServiceMenuItemTextStyle = TextStyle(
+  color: Style.Colors.titleColor,
+  fontSize: 14,
+  fontFamily: 'OpenSans',
+);
 
 final kBoxImageBackgroundStyle = BoxDecoration(
   color: Colors.white,
@@ -60,10 +71,7 @@ final kBoxImageBackgroundStyle = BoxDecoration(
   ],
 );
 
-final kLeftButtonBottomRadius = BorderRadius.only(
-    topLeft: Radius.circular(10)
-);
-final kRightButtonBottomRadius = BorderRadius.only(
-    topRight: Radius.circular(10)
-);
+final kLeftButtonBottomRadius = BorderRadius.only(topLeft: Radius.circular(10));
+final kRightButtonBottomRadius =
+    BorderRadius.only(topRight: Radius.circular(10));
 //Color(0xFF6CA8F1)

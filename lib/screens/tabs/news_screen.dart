@@ -8,9 +8,12 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("Новости"),
+    return WillPopScope(
+      onWillPop: () async {return false;},
+      child: Container(
+        child: Center(
+          child: Text("Новости"),
+        ),
       ),
     );
   }

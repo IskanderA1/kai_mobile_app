@@ -8,16 +8,19 @@ class MessengerScreen extends StatefulWidget {
 class _MessengerScreenState extends State<MessengerScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: FlatButton(
-          child: Text(
-              "Требуется\n авторизация",
-            textAlign: TextAlign.center,
+    return WillPopScope(
+      onWillPop: () async {return false;},
+      child: Container(
+        child: Center(
+          child: FlatButton(
+            child: Text(
+                "Требуется\n авторизация",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: (){
+              bottomNavBarBloc.pickItem(3);
+            },
           ),
-          onPressed: (){
-            bottomNavBarBloc.pickItem(3);
-          },
         ),
       ),
     );
