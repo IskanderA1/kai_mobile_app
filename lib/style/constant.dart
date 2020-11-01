@@ -36,6 +36,13 @@ final kAppBarTextStyle = TextStyle(
   fontSize: 18,
   fontFamily: 'OpenSans',
 );
+final kAppBarDisableTextStyle = TextStyle(
+  color: Style.Colors.standardTextColor,
+  fontWeight: FontWeight.normal,
+  fontSize: 18,
+  fontFamily: 'OpenSans',
+);
+
 final kDataTextStyle = TextStyle(
   color: Style.Colors.standardTextColor,
   //

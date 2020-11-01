@@ -5,7 +5,6 @@ import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/screens/tabs/profile_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_screen.dart';
 
-import '../tabs/news_screen.dart';
 
 class AuthCheckScreen extends StatefulWidget {
   @override
@@ -16,8 +15,7 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
   @override
   void initState() {
 
-    //authBloc..auth("AdiullovIR", "m7vro72n");
-    authBloc..authWithLocal();
+
     super.initState();
   }
   @override

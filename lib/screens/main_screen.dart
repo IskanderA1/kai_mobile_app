@@ -1,6 +1,8 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
+import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/screens/tabs/messeager_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'file:///C:/Users/79172/AndroidStudioProjects/kai_mobile_app/lib/screens/util/auth_check_screen.dart';
@@ -14,11 +16,12 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
-  //BottomNavBarBloc _bottomNavBarBloc;
+
 
   @override
   void initState() {
-    //_bottomNavBarBloc = bottomNavBarBloc;
+    authBloc..authWithLocal();
+    dayWeekBloc..setCurrDay(DayItem.FR);
     super.initState();
   }
 

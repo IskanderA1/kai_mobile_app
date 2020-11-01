@@ -9,6 +9,9 @@ class ServiceMenuScreen extends StatefulWidget {
 }
 
 class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
+
+  int isTapIndex;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +56,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
   }
 
   Widget _buildServiceMenuItem(int index) {
+
     IconData icon = Icons.event_note;
     String label = "Занятия";
     switch(index){
@@ -93,6 +97,9 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         padding: EdgeInsets.all(8),
         child: GestureDetector(
           child: Container(
+            decoration: isTapIndex==index?BoxDecoration(
+              border: Border.all(width: 1.0, color: Style.Colors.titleColor),
+            ):null,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,6 +120,9 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
             ),
           ),
           onTap: (){
+            setState(() {
+              isTapIndex = index;
+            });
             serviceMenu.pickItem(index);
           },
         )
