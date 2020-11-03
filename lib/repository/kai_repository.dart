@@ -4,11 +4,13 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
+import 'package:kai_mobile_app/model/semester_response.dart';
 import 'package:kai_mobile_app/model/user_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class KaiRepository{
+class KaiRepository {
   static String mainUrl = "http://app.kai.ru/api";
   final Dio _dio = Dio();
 
@@ -16,26 +18,26 @@ class KaiRepository{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var params = {
       "authToken": "{token}",
-      "runParams" : "{\"PipelineId\":270701192,"
+      "runParams": "{\"PipelineId\":270701192,"
           "\"StepId\":10,"
           "\"OutputName\":\"Row\","
           "\"Variables\":{"
           "\"Login\":\"$login\","
           "\"Password\":\"$password\"}"
           "}",
-      };
+    };
     try {
       Response response = await _dio.get(mainUrl, queryParameters: params);
       var data = jsonDecode(response.data);
       var rest = data["Data"] as List;
       print(data);
-      if(rest.isNotEmpty){
+      if (rest.isNotEmpty) {
         prefs.setString("login", login);
         prefs.setString("password", password);
         prefs.setString("userData", jsonEncode(data["Data"][0]));
         print(jsonEncode(data["Data"][0]));
         return UserResponse.fromJson(data["Data"][0]);
-      }else{
+      } else {
         print("Неверный логин или пароль");
         return UserResponse.withError("Неверный логин или пароль");
       }
@@ -49,11 +51,12 @@ class KaiRepository{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String login = prefs.getString("login");
     String password = prefs.getString("password");
-    var dataSP = prefs.getString("userData") != null?jsonDecode(prefs.getString("userData")):null;
-    if(login !=null && password !=null &&dataSP!=null){
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    if (login != null && password != null && dataSP != null) {
       var params = {
         "authToken": "{token}",
-        "runParams" : "{\"PipelineId\":270701192,"
+        "runParams": "{\"PipelineId\":270701192,"
             "\"StepId\":10,"
             "\"OutputName\":\"Row\","
             "\"Variables\":{"
@@ -66,10 +69,10 @@ class KaiRepository{
         var data = jsonDecode(response.data);
         var rest = data["Data"] as List;
         print(data);
-        if(rest.isNotEmpty){
+        if (rest.isNotEmpty) {
           prefs.setString("userData", jsonEncode(data["Data"][0]));
           return UserResponse.fromJson(data["Data"][0]);
-        }else{
+        } else {
           print("Авторизуйтесь");
           return UserResponse.withError("Авторизуйтесь");
         }
@@ -77,29 +80,77 @@ class KaiRepository{
         //print("Exception occured: $error stackTrace: $stacktrace");
         return UserResponse.fromJson(dataSP);
       }
-    }else{
+    } else {
       return UserResponse.withError("Авторизуйтесь");
     }
   }
 
-  Future<UserResponse> userLogOut() async {
+  Future<UserResponse> userLogOut(int semestrNum) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    for(int i = 1;i<semestrNum;i++){
+      prefs.remove("brs$i");
+    }
     prefs.remove("login");
     prefs.remove("password");
     prefs.remove("userData");
     prefs.remove("lessonsData");
+    prefs.remove("semestr");
     return UserResponse.withError("Авторизуйтесь");
   }
 
   Future<LessonsResponse> getLessons() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null?jsonDecode(prefs.getString("userData")):null;
-    var lessonsSP = prefs.getString("lessonsData") != null?jsonDecode(prefs.getString("lessonsData")):null;
-    if(dataSP != null){
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    var lessonsSP = prefs.getString("lessonsData") != null ? jsonDecode(
+        prefs.getString("lessonsData")) : null;
+    if (dataSP != null) {
       print("${dataSP["StudId"]}");
       var params = {
         "authToken": "{token}",
-        "runParams" : "{\"PipelineId\":145877938,"
+        "runParams": "{\"PipelineId\":145877938,"
+            "\"StepId\":3,"
+            "\"OutputName\":\"Row\","
+            "\"Variables\":{"
+            "\"StudId\":\"${dataSP["StudId"]}\","
+            "}}",
+      };
+      try {
+        Response response = await _dio.get(mainUrl, queryParameters: params);
+
+        var data = jsonDecode(response.data.replaceAll(RegExp(r"\\"), "/"));
+        var rest = data["Data"] as List;
+        if (rest.isNotEmpty) {
+          print("${data["Data"][0]} test");
+          prefs.setString("lessonsData", jsonEncode(data));
+          return LessonsResponse.fromJson(data);
+        } else {
+          return LessonsResponse.withError("Авторизуйтесь");
+        }
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        if (lessonsSP != null) {
+          return LessonsResponse.fromJson(lessonsSP);
+        }
+        return LessonsResponse.withError("Авторизуйтесь");
+      }
+    } else {
+      print("Требуется авторизация");
+      return LessonsResponse.withError("Авторизуйтесь");
+    }
+  }
+
+  Future<SemesterResponse> getSemestr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    var semestrSP = prefs.getString("semestr") != null ? jsonDecode(
+        prefs.getString("semestr")) : null;
+    if (dataSP != null) {
+      print("${dataSP["StudId"]}");
+      var params = {
+        "authToken": "{token}",
+        "runParams": "{\"PipelineId\":145864128,"
             "\"StepId\":3,"
             "\"OutputName\":\"Row\","
             "\"Variables\":{"
@@ -110,24 +161,64 @@ class KaiRepository{
         Response response = await _dio.get(mainUrl, queryParameters: params);
         var data = jsonDecode(response.data);
         var rest = data["Data"] as List;
-        if(rest.isNotEmpty){
-          print("${data["Data"][2]} test");
-          prefs.setString("lessonsData", jsonEncode(data));
-          return LessonsResponse.fromJson(data);
-        }else{
-          return LessonsResponse.withError("Авторизуйтесь");
+        if (rest.isNotEmpty) {
+          print("${data["Data"][0]} test");
+          prefs.setString("semestr", jsonEncode(data["Data"][0]));
+          return SemesterResponse.fromJson(data["Data"][0]);
+        } else {
+          return SemesterResponse.withError("Нет данных");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
-        if(lessonsSP !=null){
-          return LessonsResponse.fromJson(lessonsSP);
+        if (semestrSP != null) {
+          return SemesterResponse.fromJson(semestrSP);
         }
-        return LessonsResponse.withError("Авторизуйтесь");
+        return SemesterResponse.withError("Авторизуйтесь");
       }
-    }else{
+    } else {
       print("Требуется авторизация");
-      return LessonsResponse.withError("Авторизуйтесь");
+      return SemesterResponse.withError("Авторизуйтесь");
     }
+  }
 
+  Future<LessonsBRSResponse> getLessonsBRS(int semesterNum) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    var lessonsBRSSP = prefs.getString("brs$semesterNum") != null ? jsonDecode(
+        prefs.getString("brs$semesterNum")) : null;
+    if (dataSP != null) {
+      print("${dataSP["StudId"]}");
+      var params = {
+        "authToken": "{token}",
+        "runParams": "{\"PipelineId\":445063016,"
+            "\"StepId\":11,"
+            "\"OutputName\":\"Row\","
+            "\"Variables\":{"
+            "\"StudId\":\"${dataSP["StudId"]}\",\"Semestr\":\"$semesterNum\""
+            "}}",
+      };
+      try {
+        Response response = await _dio.get(mainUrl, queryParameters: params);
+        var data = jsonDecode(response.data);
+        var rest = data["Data"] as List;
+        if (rest.isNotEmpty) {
+          print("BRS: ${data["Data"][0]}");
+          prefs.setString("brs$semesterNum", jsonEncode(data));
+          return LessonsBRSResponse.fromJson(data);
+        } else {
+          return LessonsBRSResponse.withError("Авторизуйтесь");
+        }
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        if (lessonsBRSSP != null) {
+          return LessonsBRSResponse.fromJson(lessonsBRSSP);
+        }
+        return LessonsBRSResponse.withError("Авторизуйтесь");
+      }
+    } else {
+      print("Требуется авторизация");
+      return LessonsBRSResponse.withError("Авторизуйтесь");
+    }
   }
 }

@@ -15,8 +15,8 @@ class AuthUserBloc{
     UserResponse response = await _repository.userAuthLocal();
     _subject.sink.add(response);
   }
-  authLogOut() async{
-    UserResponse response = await _repository.userLogOut();
+  authLogOut(int semestrNum) async{
+    UserResponse response = await _repository.userLogOut(semestrNum);
     _subject..sink.add(response);
   }
   dispose() {

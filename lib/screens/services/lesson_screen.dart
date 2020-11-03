@@ -21,6 +21,11 @@ class _LessonsScreenState extends State<LessonsScreen> {
   }
 
   @override
+  void dispose() {
+    weekBloc.close();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
@@ -28,30 +33,33 @@ class _LessonsScreenState extends State<LessonsScreen> {
       child: Column(
         children: [
           _buildWeekCheck(),
-          PreferredSize(
-            preferredSize: null,
-            child: TabBar(
-              labelColor: Style.Colors.titleColor,
-              tabs: [
-                Tab(
-                  text: "ПН",
-                ),
-                Tab(
-                  text: "ВТ",
-                ),
-                Tab(
-                  text: "СР",
-                ),
-                Tab(
-                  text: "ЧТ",
-                ),
-                Tab(
-                  text: "ПТ",
-                ),
-                Tab(
-                  text: "СБ",
-                ),
-              ],
+          Container(
+            color: Style.Colors.mainColor,
+            child: PreferredSize(
+              preferredSize: null,
+              child: TabBar(
+                labelColor: Style.Colors.titleColor,
+                tabs: [
+                  Tab(
+                    text: "ПН",
+                  ),
+                  Tab(
+                    text: "ВТ",
+                  ),
+                  Tab(
+                    text: "СР",
+                  ),
+                  Tab(
+                    text: "ЧТ",
+                  ),
+                  Tab(
+                    text: "ПТ",
+                  ),
+                  Tab(
+                    text: "СБ",
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -77,7 +85,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
         builder: (context, AsyncSnapshot<LessonsResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              return Container();
+              return Center(
+                child: Text(snapshot.data.error),
+              );
             }
             return _buildLessonsList(snapshot.data, day);
           } else if (snapshot.hasError) {
@@ -172,7 +182,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
         top: 8,
       ),
       child: Container(
-        height: 125,
+        height: 110,
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(color: Colors.grey[200], width: 1.0),

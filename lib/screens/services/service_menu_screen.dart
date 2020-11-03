@@ -23,6 +23,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         centerTitle: true,
         backgroundColor: Style.Colors.mainColor,
         shadowColor: Colors.grey[100],
+        elevation: 0,
       ),
       body: Column(
         children: [

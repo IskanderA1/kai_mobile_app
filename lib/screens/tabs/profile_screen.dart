@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
+import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/user_response.dart';
 import 'package:kai_mobile_app/style/constant.dart';
@@ -69,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                       ),
                       onTap: () {
-                          authBloc..authLogOut();
+                          authBloc..authLogOut(getSemestrBloc.subject.value.semesters.length);
                       },
                     ),
                         ),

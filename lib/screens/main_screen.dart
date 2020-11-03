@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
+import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/screens/tabs/messeager_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'file:///C:/Users/79172/AndroidStudioProjects/kai_mobile_app/lib/screens/util/auth_check_screen.dart';
@@ -21,10 +22,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     authBloc..authWithLocal();
-    dayWeekBloc..setCurrDay(DayItem.FR);
+    dayWeekBloc..setCurrDay(DayItem.MO);
     super.initState();
   }
-
+  @override
+  void dispose() {
+    authBloc.dispose();
+    dayWeekBloc.close();
+    serviceMenu.close();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
