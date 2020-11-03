@@ -4,6 +4,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
@@ -95,6 +96,7 @@ class KaiRepository {
     prefs.remove("userData");
     prefs.remove("lessonsData");
     prefs.remove("semestr");
+    prefs.remove("group");
     return UserResponse.withError("Авторизуйтесь");
   }
 
@@ -219,6 +221,47 @@ class KaiRepository {
     } else {
       print("Требуется авторизация");
       return LessonsBRSResponse.withError("Авторизуйтесь");
+    }
+  }
+
+  Future<GroupMateResponse> getGroup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    var groupSP = prefs.getString("group") != null ? jsonDecode(
+        prefs.getString("group")) : null;
+    if (dataSP != null) {
+      print("${dataSP["StudId"]}");
+      var params = {
+        "authToken": "{token}",
+        "runParams": "{\"PipelineId\":145873539,"
+            "\"StepId\":6,"
+            "\"OutputName\":\"Row\","
+            "\"Variables\":{"
+            "\"StudId\":\"${dataSP["StudId"]}\","
+            "}}",
+      };
+      try {
+        Response response = await _dio.get(mainUrl, queryParameters: params);
+        var data = jsonDecode(response.data.replaceAll(RegExp(r"\\"), "/"));
+        var rest = data["Data"] as List;
+        if (rest.isNotEmpty) {
+          print("${data["Data"][0]} test");
+          prefs.setString("group", jsonEncode(data));
+          return GroupMateResponse.fromJson(data);
+        } else {
+          return GroupMateResponse.withError("Нет данных");
+        }
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        if (groupSP != null) {
+          return GroupMateResponse.fromJson(groupSP);
+        }
+        return GroupMateResponse.withError("Авторизуйтесь");
+      }
+    } else {
+      print("Требуется авторизация");
+      return GroupMateResponse.withError("Авторизуйтесь");
     }
   }
 }
