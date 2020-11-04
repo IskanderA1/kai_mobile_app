@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
+import 'package:kai_mobile_app/widgets/weather_widget.dart';
 
 class ServiceMenuScreen extends StatefulWidget {
   @override
@@ -9,8 +10,6 @@ class ServiceMenuScreen extends StatefulWidget {
 }
 
 class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
-
-  int isTapIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
           Expanded(
             flex: 4,
             child: Padding(
-              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              padding: EdgeInsets.only(top: 12, left: 12, right: 12),
               child: Container(
                 child: GridView.builder(
                     physics: NeverScrollableScrollPhysics(),
@@ -45,12 +44,12 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
           ),
           Expanded(
             flex: 3,
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Container(
-              ),
+            child: Column(
+              children: [
+                buildWeatherWidget(context),
+              ],
             ),
-          )
+            ),
         ],
       ),
     );
@@ -94,39 +93,31 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         label = "Контроль";
         break;
     }
-    return Padding(
-        padding: EdgeInsets.all(8),
-        child: GestureDetector(
-          child: Container(
-            decoration: isTapIndex==index?BoxDecoration(
-              border: Border.all(width: 1.0, color: Style.Colors.titleColor),
-            ):null,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  color: Style.Colors.titleColor,
-                  size: 40,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  label,
-                  style: kServiceMenuItemTextStyle,
-                ),
-              ],
+    return FlatButton(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Style.Colors.titleColor,
+              size: 40,
             ),
-          ),
-          onTap: (){
-            setState(() {
-              isTapIndex = index;
-            });
-            serviceMenu.pickItem(index);
-          },
-        )
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              label,
+              style: kServiceMenuItemTextStyle,
+            ),
+          ],
+        ),
+      ),
+      onPressed: (){
+
+        serviceMenu.pickItem(index);
+      },
     );
   }
 }

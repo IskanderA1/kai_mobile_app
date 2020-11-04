@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/get_brs_lesson_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
+import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/lesson_brs_model.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
@@ -28,6 +30,9 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
         builder: (context, AsyncSnapshot<SemesterResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              if(snapshot.data.error == "Авторизуйтесь"){
+                return buildAuthButton();
+              }
               return Center(
                 child: Text(snapshot.data.error),
               );
@@ -39,6 +44,15 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
               child: Scaffold(
                 appBar: AppBar(
                   elevation: 0,
+                  leading: IconButton(
+                    icon: Icon(
+                        Icons.arrow_back,
+                      color: Style.Colors.titleColor,
+                    ),
+                    onPressed: () {
+                      serviceMenu..backToMenu();
+                    },
+                  ),
                   title: Text(
                     "Сервисы",
                     style: kAppBarTextStyle,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_lessons_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
+import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/lesson_model.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
@@ -85,6 +86,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
         builder: (context, AsyncSnapshot<LessonsResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              if(snapshot.data.error == "Авторизуйтесь"){
+                return buildAuthButton();
+              }
               return Center(
                 child: Text(snapshot.data.error),
               );
@@ -139,7 +143,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                       child: Text(
                         "Четная",
                         style: snapshot.data == WeekItem.EVEN
-                            ? kAppBarTextStyle
+                            ? kAppBarEnableTextStyle
                             : kAppBarDisableTextStyle,
                       ),
                     ),
@@ -164,7 +168,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                       child: Text(
                         "Нечетная",
                         style: snapshot.data == WeekItem.UNEVEN
-                            ? kAppBarTextStyle
+                            ? kAppBarEnableTextStyle
                             : kAppBarDisableTextStyle,
                       ),
                     ),

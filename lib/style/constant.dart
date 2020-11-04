@@ -39,7 +39,13 @@ final kAppBarTextStyle = TextStyle(
 final kAppBarDisableTextStyle = TextStyle(
   color: Style.Colors.standardTextColor,
   fontWeight: FontWeight.normal,
-  fontSize: 18,
+  fontSize: 15,
+  fontFamily: 'OpenSans',
+);
+final kAppBarEnableTextStyle = TextStyle(
+  color: Style.Colors.titleColor,
+  fontWeight: FontWeight.normal,
+  fontSize: 15,
   fontFamily: 'OpenSans',
 );
 
@@ -63,7 +69,7 @@ final kSpanTextStyle = TextStyle(
 );
 final kServiceMenuItemTextStyle = TextStyle(
   color: Style.Colors.titleColor,
-  fontSize: 14,
+  fontSize: 12,
   fontFamily: 'OpenSans',
 );
 

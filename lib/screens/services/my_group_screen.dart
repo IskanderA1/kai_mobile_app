@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/get_group_mate_bloc.dart';
+import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/group_mate_model.dart';
@@ -27,6 +29,15 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
           "Моя группа",
           style: kAppBarTextStyle,
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Style.Colors.titleColor,
+          ),
+          onPressed: () {
+            serviceMenu..backToMenu();
+          },
+        ),
         centerTitle: true,
         backgroundColor: Style.Colors.mainColor,
         shadowColor: Colors.grey[100],
@@ -37,6 +48,9 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
             if (snapshot.hasData) {
               if (snapshot.data.error != null &&
                   snapshot.data.error.length > 0) {
+                if(snapshot.data.error == "Авторизуйтесь"){
+                  return buildAuthButton();
+                }
                 return Center(
                   child: Text(snapshot.data.error),
                 );

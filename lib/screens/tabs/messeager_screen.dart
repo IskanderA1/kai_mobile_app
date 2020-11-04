@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
+import 'package:kai_mobile_app/style/constant.dart';
+import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 class MessengerScreen extends StatefulWidget {
   @override
   _MessengerScreenState createState() => _MessengerScreenState();
@@ -10,18 +12,18 @@ class _MessengerScreenState extends State<MessengerScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {return false;},
-      child: Container(
-        child: Center(
-          child: FlatButton(
-            child: Text(
-                "Требуется\n авторизация",
-              textAlign: TextAlign.center,
-            ),
-            onPressed: (){
-              bottomNavBarBloc.pickItem(3);
-            },
+      child:Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            "Сообщения",
+            style: kAppBarTextStyle,
           ),
+          centerTitle: true,
+          backgroundColor: Style.Colors.mainColor,
+          shadowColor: Colors.grey[100],
         ),
+        body: Center(child: Text("Нет данных")),
       ),
     );
   }
