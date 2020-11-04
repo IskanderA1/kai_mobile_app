@@ -62,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Colors.grey[100], spreadRadius: 0, blurRadius: 10),
+                    color: Colors.grey[100], spreadRadius: 0, blurRadius: 2),
               ],
             ),
             child: ClipRRect(

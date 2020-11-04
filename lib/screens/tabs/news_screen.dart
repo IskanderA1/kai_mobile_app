@@ -41,7 +41,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Новости каи",
+                            "Новости КАИ",
                             style: snapshot.data == NewsTypeItem.KAI
                                 ? kAppBarEnableTextStyle
                                 : kAppBarDisableTextStyle,
@@ -66,7 +66,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Новости факультета",
+                            "Факультета",
                             style: snapshot.data == NewsTypeItem.FAC
                                 ? kAppBarEnableTextStyle
                                 : kAppBarDisableTextStyle,
