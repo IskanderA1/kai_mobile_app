@@ -14,8 +14,6 @@ class AuthCheckScreen extends StatefulWidget {
 class _AuthCheckScreenState extends State<AuthCheckScreen> {
   @override
   void initState() {
-
-
     super.initState();
   }
   @override

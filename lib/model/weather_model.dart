@@ -8,7 +8,7 @@ class WeatherModel {
 
   WeatherModel.fromJson(dynamic data){
     cityName = data['name'];
-    temputure = data['main']['temp'];
+    temputure = data['main']['temp'].toInt();
     icon = getWeatherIcon(data['weather'][0]['id']);
   }
   WeatherModel();
