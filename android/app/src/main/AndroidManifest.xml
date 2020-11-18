@@ -6,9 +6,11 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="KaiMobile"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD3c55q2Nvny8zGbiqR0F4L3NYGQyR7a8U"/>
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

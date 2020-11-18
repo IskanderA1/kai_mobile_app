@@ -2,11 +2,13 @@
 
 import 'dart:async';
 
+import 'package:rxdart/rxdart.dart';
+
 enum WeekItem{EVEN,UNEVEN}
 
 class WeekBloc{
-  final StreamController<WeekItem> _weekController =
-  StreamController<WeekItem>.broadcast();
+  final BehaviorSubject<WeekItem> _weekController =
+  BehaviorSubject<WeekItem>();
 
   WeekItem currWeek = WeekItem.EVEN;
 

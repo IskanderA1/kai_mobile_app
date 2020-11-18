@@ -18,14 +18,15 @@ class _LessonsScreenState extends State<LessonsScreen> {
   @override
   void initState() {
     getLessonsBloc..getLessons();
+    weekBloc..pickWeek(0);
     super.initState();
   }
 
   @override
   void dispose() {
-    weekBloc.close();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -86,7 +87,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
         builder: (context, AsyncSnapshot<LessonsResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              if(snapshot.data.error == "Авторизуйтесь"){
+              if (snapshot.data.error == "Авторизуйтесь") {
                 return buildAuthButton();
               }
               return Center(
@@ -255,7 +256,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           color: Style.Colors.titleColor,
                         ),
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Text(
                         "${lesson.disciplineType}",
                         textAlign: TextAlign.start,
@@ -265,7 +268,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           color: Style.Colors.standardTextColor,
                         ),
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Text(
                         "${lesson.prepodName}",
                         textAlign: TextAlign.start,
@@ -275,7 +280,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
                           color: Style.Colors.standardTextColor,
                         ),
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       lesson.dayDate != null
                           ? Text(
                               "${lesson.dayDate}",

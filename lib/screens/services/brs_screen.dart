@@ -19,7 +19,6 @@ class BRSScreen extends StatefulWidget {
 class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
   @override
   void initState() {
-    getSemestrBloc..getSemestr();
     super.initState();
   }
 
