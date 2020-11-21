@@ -6,10 +6,9 @@ import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
-import 'package:kai_mobile_app/screens/tabs/messeager_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
-import 'file:///C:/Users/79172/AndroidStudioProjects/kai_mobile_app/lib/screens/util/auth_check_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
+import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 
 class MainScreen extends StatefulWidget {
@@ -22,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     authBloc..authWithLocal();
-    dayWeekBloc..setCurrDay(DayItem.MO);
+    dayWeekBloc..getDay();
     getSemestrBloc..getSemestr();
     super.initState();
   }

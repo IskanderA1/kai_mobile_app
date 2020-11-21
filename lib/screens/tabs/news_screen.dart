@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kai_mobile_app/bloc/get_news_bloc.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/news_model.dart';
@@ -6,9 +7,8 @@ import 'package:kai_mobile_app/model/news_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
-import 'package:kai_mobile_app/bloc/news_type_bloc.dart';
 
-import 'detail_news_screen.dart';
+import '../detail/detail_news_screen.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class _NewsScreenState extends State<NewsScreen> {
           ),
           centerTitle: true,
         ),
-              body: Column(
+        body: Column(
           children: [
             Expanded(
               child: _buildNewsView(),
@@ -48,8 +48,6 @@ class _NewsScreenState extends State<NewsScreen> {
       ),
     );
   }
-
-
 
   Widget _buildNewsView() {
     return StreamBuilder(
@@ -79,6 +77,7 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget _buildNewsItem(NewsModel newsModel) {
+    DateTime dateTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(newsModel.date);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -87,10 +86,14 @@ class _NewsScreenState extends State<NewsScreen> {
                 builder: (context) => DetailNewsScreen(newsModel)));
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 8, left: 8, right: 8,),
+        padding: const EdgeInsets.only(
+          top: 8,
+          left: 8,
+          right: 8,
+        ),
         child: Card(
           elevation: 2,
-                  child: Container(
+          child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               boxShadow: [
@@ -130,7 +133,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       alignment: Alignment.center,
                       child: Hero(
                         tag: newsModel.date,
-                          child: Text(
+                        child: Text(
                           newsModel.title,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -142,12 +145,25 @@ class _NewsScreenState extends State<NewsScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 24.0, right: 8, left: 8),
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, right: 8, left: 8),
                   child: Text(
                     newsModel.desc,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
                     style: TextStyle(fontSize: 12),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0, right: 16),
+                    child: Text(
+                      "Опубликовано: ${dateTime.day}.${dateTime.month}.${dateTime.year}",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: kHintTextStyle,
+                    ),
                   ),
                 ),
               ],
@@ -158,62 +174,61 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-
-    Widget _buildNewsCheck() {
-    return StreamBuilder(
-        stream: newsTypeBloc.newsTypeStream,
-        initialData: newsTypeBloc.defNewsType,
-        builder: (context, AsyncSnapshot<NewsTypeItem> snapshot) {
-          return Container(
-            height: 60,
-            child: Row(
-              children: [
-                Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    newsTypeBloc.pickWeek(0);
-                  },
-                  child: Container(
-                    color: Style.Colors.mainColor,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Новости КАИ",
-                        style: snapshot.data == NewsTypeItem.KAI
-                            ? kAppBarEnableTextStyle
-                            : kAppBarDisableTextStyle,
-                      ),
-                    ),
-                  ),
-                )),
-                SizedBox(
-                  height: 25,
-                  width: 1,
-                  child: Container(
-                    color: Style.Colors.titleColor,
-                  ),
-                ),
-                Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    newsTypeBloc.pickWeek(1);
-                  },
-                  child: Container(
-                    color: Style.Colors.mainColor,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Факультета",
-                        style: snapshot.data == NewsTypeItem.FAC
-                            ? kAppBarEnableTextStyle
-                            : kAppBarDisableTextStyle,
-                      ),
-                    ),
-                  ),
-                )),
-              ],
-            ),
-          );
-        });
-  }
+  //   Widget _buildNewsCheck() {
+  //   return StreamBuilder(
+  //       stream: newsTypeBloc.newsTypeStream,
+  //       initialData: newsTypeBloc.defNewsType,
+  //       builder: (context, AsyncSnapshot<NewsTypeItem> snapshot) {
+  //         return Container(
+  //           height: 60,
+  //           child: Row(
+  //             children: [
+  //               Expanded(
+  //                   child: GestureDetector(
+  //                 onTap: () {
+  //                   newsTypeBloc.pickWeek(0);
+  //                 },
+  //                 child: Container(
+  //                   color: Style.Colors.mainColor,
+  //                   child: Align(
+  //                     alignment: Alignment.center,
+  //                     child: Text(
+  //                       "Новости КАИ",
+  //                       style: snapshot.data == NewsTypeItem.KAI
+  //                           ? kAppBarEnableTextStyle
+  //                           : kAppBarDisableTextStyle,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               )),
+  //               SizedBox(
+  //                 height: 25,
+  //                 width: 1,
+  //                 child: Container(
+  //                   color: Style.Colors.titleColor,
+  //                 ),
+  //               ),
+  //               Expanded(
+  //                   child: GestureDetector(
+  //                 onTap: () {
+  //                   newsTypeBloc.pickWeek(1);
+  //                 },
+  //                 child: Container(
+  //                   color: Style.Colors.mainColor,
+  //                   child: Align(
+  //                     alignment: Alignment.center,
+  //                     child: Text(
+  //                       "Факультета",
+  //                       style: snapshot.data == NewsTypeItem.FAC
+  //                           ? kAppBarEnableTextStyle
+  //                           : kAppBarDisableTextStyle,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               )),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

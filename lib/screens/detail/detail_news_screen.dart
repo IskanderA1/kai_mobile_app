@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kai_mobile_app/model/news_model.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
+import 'package:kai_mobile_app/style/constant.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'dart:math' as math;
 
@@ -48,12 +50,29 @@ class _DetailNewsScreenState extends State<DetailNewsScreen> {
                 // ignore: missing_return
                 SliverChildBuilderDelegate(
               (BuildContext context, int index) {
+                DateTime dateTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(newsModel.date);
                 return Card(
                     elevation: 2,
                     margin: EdgeInsets.all(16),
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Text(newsModel.desc),
+                    child: Column(
+                      children: [
+                         Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16.0, right: 16),
+                    child: Text(
+                      "Опубликовано: ${dateTime.day}.${dateTime.month}.${dateTime.year}",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                      style: kHintTextStyle,
+                    ),
+                  ),
+                ),
+                Container(
+                          padding: EdgeInsets.all(16),
+                          child: Text(newsModel.desc),
+                        ),
+                      ],
                     ));
               },
               childCount: 1
