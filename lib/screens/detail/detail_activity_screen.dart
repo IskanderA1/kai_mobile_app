@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:kai_mobile_app/model/activity_model.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
+
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'dart:math' as math;
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailActivityScreen extends StatefulWidget {
   final ActivityModel activityModel;
@@ -90,7 +93,13 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                           child: Row(
                             children: [
                               Expanded(flex:1, child: Text("Ссылки: ",style: kLabelStyle,)),
-                              Expanded(flex:2, child: Text("${_activityModel.links}"))
+                              Expanded(flex:2, child: Linkify(text:"${_activityModel.links}",onOpen: (link) async {
+    if (await canLaunch(link.url)) {
+        await launch(link.url);
+      } else {
+        throw 'Could not launch $link';
+      }
+  },))
                             ],
                           ),
                         ),
