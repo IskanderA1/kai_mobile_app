@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                       ),
                       onTap: () {
-                          authBloc..authLogOut(getSemestrBloc.subject.value.semesters.length);
+                          authBloc..authLogOut(getSemestrBloc.subject.value.semesters.length!=null?getSemestrBloc.subject.value.semesters.length:0);
                       },
                     ),
                         ),

@@ -26,30 +26,29 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: EdgeInsets.only(top: 12, left: 12, right: 12),
-              child: Container(
-                child: GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+            Container(
+              height: MediaQuery.of(context).size.height/2,
+                child: Padding(
+                  padding: EdgeInsets.only( left: 15, right: 15),
+                  child: Container(
+                    child: GridView.builder(
+                      scrollDirection: Axis.vertical,
+                    physics: AlwaysScrollableScrollPhysics(),
                     itemCount: 8,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3, childAspectRatio: 1),
                     itemBuilder: (context, index) {
                       return _buildServiceMenuItem(index);
                     }),
-              ),
+                  ),
+                ),
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: [
-                buildWeatherWidget(context),
-              ],
+              Expanded(
+                flex: 3,
+              child: Column(
+                children: [buildWeatherWidget(context),]
             ),
-            ),
+              ), 
         ],
       ),
     );

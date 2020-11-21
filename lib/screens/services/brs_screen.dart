@@ -19,6 +19,7 @@ class BRSScreen extends StatefulWidget {
 class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
   @override
   void initState() {
+    getSemestrBloc..getSemestr();
     super.initState();
   }
 
@@ -53,7 +54,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                     },
                   ),
                   title: Text(
-                    "Сервисы",
+                    "БРС",
                     style: kAppBarTextStyle,
                   ),
                   centerTitle: true,

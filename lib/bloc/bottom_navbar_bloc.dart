@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-enum NavBarItem{NEWS,SERVICE,MESSENGER, PROFILE}
+enum NavBarItem{NEWS,SERVICE, PROFILE}
 
 class BottomNavBarBloc{
 
@@ -21,11 +21,14 @@ class BottomNavBarBloc{
         _navBarController.sink.add(NavBarItem.SERVICE);
         break;
       case 2:
-        _navBarController.sink.add(NavBarItem.MESSENGER);
+      _navBarController.sink.add(NavBarItem.PROFILE);
         break;
       case 3:
-        _navBarController.sink.add(NavBarItem.PROFILE);
+      _navBarController.sink.add(NavBarItem.PROFILE);
         break;
+      // case 3:
+      //   _navBarController.sink.add(NavBarItem.MESSENGER);
+      //   break;
     }
   }
 

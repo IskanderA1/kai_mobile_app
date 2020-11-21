@@ -52,8 +52,8 @@ class _MainScreenState extends State<MainScreen> {
                 return NewsScreen();
               case NavBarItem.SERVICE:
                 return ServiceScreen();
-              case NavBarItem.MESSENGER:
-                return MessengerScreen();
+              // case NavBarItem.MESSENGER:
+              //   return MessengerScreen();
               case NavBarItem.PROFILE:
                 return AuthCheckScreen();
             }
@@ -94,17 +94,17 @@ class _MainScreenState extends State<MainScreen> {
                     label: "",
                     icon: Icon(EvaIcons.gridOutline),
                     activeIcon: Icon(EvaIcons.grid),
-                  ),
-                  BottomNavigationBarItem(
-                    label: "",
-                    icon: Icon(EvaIcons.messageSquareOutline),
-                    activeIcon: Icon(EvaIcons.messageSquare),
-                  ),
+                  ),  
                   BottomNavigationBarItem(
                     label: "",
                     icon: Icon(EvaIcons.personOutline),
                     activeIcon: Icon(EvaIcons.person),
                   ),
+                  // BottomNavigationBarItem(
+                  //   label: "",
+                  //   icon: Icon(EvaIcons.messageSquareOutline),
+                  //   activeIcon: Icon(EvaIcons.messageSquare),
+                  // ),
                 ],
               ),
             ),
