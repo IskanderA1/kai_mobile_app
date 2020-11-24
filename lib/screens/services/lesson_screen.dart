@@ -18,7 +18,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
   @override
   void initState() {
     getLessonsBloc..getLessons();
-    weekBloc..pickWeek(0);
+    weekBloc..getCurrWeek();
     super.initState();
   }
 

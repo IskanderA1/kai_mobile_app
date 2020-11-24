@@ -17,7 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   @override
   void initState() {
     authBloc..authWithLocal();
@@ -29,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     authBloc.dispose();
+    weekBloc..close();
     dayWeekBloc.close();
     serviceMenu.close();
     bottomNavBarBloc.close();
@@ -93,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                     label: "",
                     icon: Icon(EvaIcons.gridOutline),
                     activeIcon: Icon(EvaIcons.grid),
-                  ),  
+                  ),
                   BottomNavigationBarItem(
                     label: "",
                     icon: Icon(EvaIcons.personOutline),

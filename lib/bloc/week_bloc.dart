@@ -1,14 +1,13 @@
-
-
 import 'dart:async';
 
+import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-enum WeekItem{EVEN,UNEVEN}
+enum WeekItem { EVEN, UNEVEN }
 
-class WeekBloc{
-  final BehaviorSubject<WeekItem> _weekController =
-  BehaviorSubject<WeekItem>();
+class WeekBloc {
+  final MobileRepository _repository = MobileRepository();
+  final BehaviorSubject<WeekItem> _weekController = BehaviorSubject<WeekItem>();
 
   WeekItem currWeek = WeekItem.EVEN;
 
@@ -25,11 +24,19 @@ class WeekBloc{
     }
   }
 
-    void setCurrWeek(WeekItem weekItem){
-      this.currWeek = weekItem;
-    }
-    close() {
-      _weekController?.close();
+  getCurrWeek() async {
+    int response = await _repository.getCurrWeek();
+    if (response == 1) {
+      this.currWeek = WeekItem.UNEVEN;
+      _weekController.sink.add(WeekItem.UNEVEN);
+    } else {
+      _weekController.sink.add(WeekItem.EVEN);
     }
   }
-  final weekBloc = WeekBloc();
+
+  close() {
+    _weekController?.close();
+  }
+}
+
+final weekBloc = WeekBloc();

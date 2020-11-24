@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:kai_mobile_app/bloc/get_group_mate_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/elements/auth_button.dart';
@@ -7,6 +8,7 @@ import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/group_mate_model.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
+import 'package:url_launcher/url_launcher.dart';
 
 class MyGroupScreen extends StatefulWidget {
   @override
@@ -130,7 +132,14 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
                               SizedBox(
                                 height: 12,
                               ),
-                              Text(groupMate.studentPhone),
+                              //Text(groupMate.studentPhone),
+                              Linkify(text:"${groupMate.studentPhone}",onOpen: (link) async {
+                                  if (await canLaunch(link.url)) {
+                                    await launch(link.url);
+                                    } else {
+                              throw 'Could not launch $link';
+                                  }
+                                },)
                             ],
                           ),
                         ),
@@ -145,7 +154,13 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
                               SizedBox(
                                 height: 12,
                               ),
-                              Text(groupMate.studentEmail),
+                              Linkify(text:"${groupMate.studentEmail}",onOpen: (link) async {
+                                  if (await canLaunch(link.url)) {
+                                    await launch(link.url);
+                                    } else {
+                              throw 'Could not launch $link';
+                                  }
+                                },),
                             ],
                           ),
                         )
