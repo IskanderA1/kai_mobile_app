@@ -1,11 +1,10 @@
-
-
 import 'dart:async';
 
-enum NavBarItem{NEWS,SERVICE, PROFILE}
+import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 
-class BottomNavBarBloc{
+enum NavBarItem { NEWS, SERVICE, PROFILE }
 
+class BottomNavBarBloc {
   final StreamController<NavBarItem> _navBarController =
       StreamController<NavBarItem>.broadcast();
 
@@ -18,13 +17,14 @@ class BottomNavBarBloc{
         _navBarController.sink.add(NavBarItem.NEWS);
         break;
       case 1:
+        serviceMenu.backToMenu();
         _navBarController.sink.add(NavBarItem.SERVICE);
         break;
       case 2:
-      _navBarController.sink.add(NavBarItem.PROFILE);
+        _navBarController.sink.add(NavBarItem.PROFILE);
         break;
       case 3:
-      _navBarController.sink.add(NavBarItem.PROFILE);
+        _navBarController.sink.add(NavBarItem.PROFILE);
         break;
       // case 3:
       //   _navBarController.sink.add(NavBarItem.MESSENGER);
@@ -36,4 +36,5 @@ class BottomNavBarBloc{
     _navBarController?.close();
   }
 }
+
 final bottomNavBarBloc = BottomNavBarBloc();

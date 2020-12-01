@@ -10,6 +10,7 @@ class SendReportBloc{
       BehaviorSubject<ReportResponse>();
 
   sendReport(File img, String text) async{
+    _subject.sink.add(ReportResponse.responseText("Loading"));
     ReportResponse response = await _repository.sendReport(img, text);
     _subject.sink.add(response);
   }

@@ -82,7 +82,9 @@ class _MainScreenState extends State<MainScreen> {
                 showUnselectedLabels: false,
                 fixedColor: Style.Colors.titleColor,
                 currentIndex: snapshot.data.index,
-                onTap: bottomNavBarBloc.pickItem,
+                onTap: (int i) {
+                    bottomNavBarBloc.pickItem(i);
+                  },
                 items: [
                   BottomNavigationBarItem(
                     label: "",

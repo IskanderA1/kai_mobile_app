@@ -8,8 +8,8 @@ Widget buildLoadingWidget() {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       SizedBox(
-        height: 100.0,
-        width: 100.0,
+        height: 50.0,
+        width: 50.0,
         child: SpinKitDoubleBounce(
           size: 50,
           color: Style.Colors.titleColor,

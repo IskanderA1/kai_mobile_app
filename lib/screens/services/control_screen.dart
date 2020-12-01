@@ -65,25 +65,35 @@ class _ControlScreenState extends State<ControlScreen> {
     );
   }
 
-  Widget _buildWrong() {
-    return Container(
-      height: 30.0,
-      alignment: Alignment.bottomCenter,
-      child: StreamBuilder<ReportResponse>(
-          stream: sendReportBloc.subject.stream,
-          builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data.text != null && snapshot.data.text.length > 0) {
-                return Text(
-                  snapshot.data.text,
-                  style: kLabelStyle,
-                );
-              }
-            }
-            return SizedBox();
-          }),
+  Widget _buildSetPhotoLabel() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Text("Добавьте фото", style: kLabelStyle),
     );
   }
+
+  final snackBar = SnackBar(
+    content: StreamBuilder<ReportResponse>(
+        stream: sendReportBloc.subject.stream,
+        builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.text != null && snapshot.data.text.length > 0) {
+              return Text(
+                snapshot.data.text,
+                style: TextStyle(
+                  color: Style.Colors.mainColor,
+                ),
+              );
+            }
+          }
+          return SizedBox();
+        }),
+    action: SnackBarAction(
+      label: 'Ок',
+      //textColor: Style.Colors.titleColor,
+      onPressed: () {},
+    ),
+  );
 
   Widget _buildSendReportBtn() {
     return Container(
@@ -91,12 +101,17 @@ class _ControlScreenState extends State<ControlScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
-          sendReportBloc.sendReport(_selectedFile, _reportController.text);
-          setState(() {
-            _selectedFile = null;
-          });
-          _reportController.clear();
+        onPressed: () async {
+          await sendReportBloc.sendReport(
+              _selectedFile, _reportController.text);
+          Scaffold.of(context).showSnackBar(snackBar);
+          if (sendReportBloc.subject.stream.value.text ==
+              "Ваша заявка принята") {
+            setState(() {
+              _selectedFile = null;
+            });
+            _reportController.clear();
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -118,19 +133,17 @@ class _ControlScreenState extends State<ControlScreen> {
 
   Widget getImageWidget() {
     if (_selectedFile != null) {
-      return Image.file(
-        _selectedFile,
-        width: 250,
-        height: 250,
-        fit: BoxFit.cover,
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Image.file(
+          _selectedFile,
+          width: 250,
+          height: 250,
+          fit: BoxFit.cover,
+        ),
       );
     } else {
-      return Image.asset(
-        "assets/placeholder.jpg",
-        width: 250,
-        height: 250,
-        fit: BoxFit.cover,
-      );
+      return SizedBox();
     }
   }
 
@@ -170,75 +183,93 @@ class _ControlScreenState extends State<ControlScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Style.Colors.titleColor,
-            ),
-            onPressed: () {
-              serviceMenu..backToMenu();
-            },
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Style.Colors.titleColor,
           ),
-          title: Text(
-            "Контроль",
-            style: kAppBarTextStyle,
-          ),
-          centerTitle: true,
-          backgroundColor: Style.Colors.mainColor,
-          shadowColor: Colors.grey[100],
+          onPressed: () {
+            serviceMenu..backToMenu();
+          },
         ),
-        body: SingleChildScrollView(
-                  child: Stack(
-            children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildReportTextField(),
-                  getImageWidget(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      MaterialButton(
-                          elevation: 5,
-                          minWidth: 150,
-                          color: Style.Colors.titleColor,
-                          child: Text(
-                            "Камера",
-                            style: TextStyle(color: Style.Colors.mainColor),
-                          ),
-                          onPressed: () {
-                            getImage(ImageSource.camera);
-                          }),
-                      MaterialButton(
-                          elevation: 5,
-                          minWidth: 150,
-                          color: Style.Colors.mainColor,
-                          child: Text(
-                            "Из устройства",
-                            style: TextStyle(color: Style.Colors.titleColor),
-                          ),
-                          onPressed: () {
-                            getImage(ImageSource.gallery);
-                          })
-                    ],
-                  ),
-                  _buildWrong(),
-                  _buildSendReportBtn(),
-                ],
-              ),
-              (_inProcess)
-                  ? Container(
-                      color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.95,
-                      child: Center(
-                        child: buildLoadingWidget(),
-                      ),
-                    )
-                  : Center()
-            ],
+        title: Text(
+          "Контроль",
+          style: kAppBarTextStyle,
+        ),
+        centerTitle: true,
+        backgroundColor: Style.Colors.mainColor,
+        shadowColor: Colors.grey[100],
+      ),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildReportTextField(),
+                _buildSetPhotoLabel(),
+                getImageWidget(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    MaterialButton(
+                        elevation: 5,
+                        minWidth: 150,
+                        color: Style.Colors.titleColor,
+                        child: Text(
+                          "Камера",
+                          style: TextStyle(color: Style.Colors.mainColor),
+                        ),
+                        onPressed: () {
+                          getImage(ImageSource.camera);
+                        }),
+                    MaterialButton(
+                        elevation: 5,
+                        minWidth: 150,
+                        color: Style.Colors.mainColor,
+                        child: Text(
+                          "Из устройства",
+                          style: TextStyle(color: Style.Colors.titleColor),
+                        ),
+                        onPressed: () {
+                          getImage(ImageSource.gallery);
+                        })
+                  ],
+                ),
+                _buildSendReportBtn(),
+              ],
+            ),
           ),
-        ));
+          (_inProcess)
+              ? Container(
+                  color: Colors.white,
+                  height: MediaQuery.of(context).size.height * 0.95,
+                  child: Center(
+                    child: buildLoadingWidget(),
+                  ),
+                )
+              : Center(),
+          StreamBuilder<ReportResponse>(
+              stream: sendReportBloc.subject.stream,
+              builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.text == "Loading") {
+                    return Container(
+                      color: Style.Colors.mainColor,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: buildLoadingWidget(),
+                    );
+                  } else {
+                    return Center();
+                  }
+                }
+                return SizedBox();
+              }),
+        ],
+      ),
+    );
   }
 }

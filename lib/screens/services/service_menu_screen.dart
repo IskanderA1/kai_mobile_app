@@ -24,32 +24,34 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         shadowColor: Colors.grey[100],
         elevation: 0,
       ),
-      body: Column(
-        children: [
-            Container(
-              height: MediaQuery.of(context).size.height/2,
-                child: Padding(
-                  padding: EdgeInsets.only( left: 15, right: 15),
-                  child: Container(
-                    child: GridView.builder(
-                      scrollDirection: Axis.vertical,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemCount: 8,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, childAspectRatio: 1),
-                    itemBuilder: (context, index) {
-                      return _buildServiceMenuItem(index);
-                    }),
-                  ),
-                ),
-            ),
-              Expanded(
-                flex: 3,
+      body: SingleChildScrollView(
               child: Column(
-                children: [buildWeatherWidget(context),]
-            ),
+          children: [
+              Container(
+                height: MediaQuery.of(context).size.height/2,
+                  child: Padding(
+                    padding: EdgeInsets.only( left: 15, right: 15),
+                    child: Container(
+                      child: GridView.builder(
+                        scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 8,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, childAspectRatio: 1),
+                      itemBuilder: (context, index) {
+                        return _buildServiceMenuItem(index);
+                      }),
+                    ),
+                  ),
+              ),
+                Container(
+                child: Column(
+                  children: [buildWeatherWidget(context),]
+                  ),
               ), 
-        ],
+              
+          ],
+        ),
       ),
     );
   }

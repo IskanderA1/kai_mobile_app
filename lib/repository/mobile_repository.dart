@@ -77,16 +77,17 @@ class MobileRepository {
               headers: headers,
             ));
         print(response);
-        if (response.statusCode == 200) {
-          return ReportResponse.responseText("Успешно");
-        } else if ((response.statusCode == 500)) {
+        if (response.statusCode >= 200 && response.statusCode <= 299) {
+          print("Ваша заявка принята");
+          return ReportResponse.responseText("Ваша заявка принята");
+        } else if ((response.statusCode >= 500)) {
           return ReportResponse.responseText("Ошибка сервера");
         } else {
           return ReportResponse.responseText("Ошибка ");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
-        return ReportResponse.responseText("Нет сети");
+        return ReportResponse.responseText("Не удалось отправить запрос");
       }
     } else {
       return ReportResponse.responseText("Заполните все поля");
