@@ -79,19 +79,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   Widget _buildLessonsList(ExamsResponse lessonsResponse) {
     List<ExamModel> lessons = lessonsResponse.exams;
-    return StreamBuilder(
-        stream: weekBloc.weekStream,
-        initialData: weekBloc.currWeek,
-        builder: (context, AsyncSnapshot<WeekItem> snapshot) {
-          print("snap");
-          print(snapshot.data);
-          return ListView.builder(
+    return ListView.builder(
               itemCount: lessons.length,
               itemBuilder: (context, index) {
                 return _buildLessonItem(lessons[index])
                     ;
               });
-        });
+
   }
 
  

@@ -4,7 +4,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:kai_mobile_app/bloc/get_exams_bloc.dart';
 import 'package:kai_mobile_app/model/exams_response.dart';
 import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
@@ -33,7 +32,7 @@ class KaiRepository {
       Response response = await _dio.get(mainUrl, queryParameters: params);
       var data = jsonDecode(response.data);
       var rest = data["Data"] as List;
-      print(data);
+      //print(data);
       if (rest.isNotEmpty) {
         prefs.setString("login", login);
         prefs.setString("password", password);
@@ -71,7 +70,7 @@ class KaiRepository {
         Response response = await _dio.get(mainUrl, queryParameters: params);
         var data = jsonDecode(response.data);
         var rest = data["Data"] as List;
-        print(data);
+        //print(data);
         if (rest.isNotEmpty) {
           prefs.setString("userData", jsonEncode(data["Data"][0]));
           return UserResponse.fromJson(data["Data"][0]);

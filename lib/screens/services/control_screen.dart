@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:kai_mobile_app/bloc/control_type_bloc.dart';
+import 'package:kai_mobile_app/bloc/get_reports_bloc.dart';
 import 'package:kai_mobile_app/bloc/send_report_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/report_response.dart';
+import 'package:kai_mobile_app/model/reports_model.dart';
+import 'package:kai_mobile_app/model/reports_response.dart';
+import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 
@@ -22,6 +29,7 @@ class _ControlScreenState extends State<ControlScreen> {
 
   @override
   void initState() {
+    getReportsBloc..getReports();
     super.initState();
   }
 
@@ -111,6 +119,7 @@ class _ControlScreenState extends State<ControlScreen> {
               _selectedFile = null;
             });
             _reportController.clear();
+            getReportsBloc..getReports();
           }
         },
         padding: EdgeInsets.all(15.0),
@@ -202,74 +211,294 @@ class _ControlScreenState extends State<ControlScreen> {
         backgroundColor: Style.Colors.mainColor,
         shadowColor: Colors.grey[100],
       ),
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-              child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildReportTextField(),
-                _buildSetPhotoLabel(),
-                getImageWidget(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    MaterialButton(
-                        elevation: 5,
-                        minWidth: 150,
-                        color: Style.Colors.titleColor,
-                        child: Text(
-                          "Камера",
-                          style: TextStyle(color: Style.Colors.mainColor),
-                        ),
-                        onPressed: () {
-                          getImage(ImageSource.camera);
-                        }),
-                    MaterialButton(
-                        elevation: 5,
-                        minWidth: 150,
-                        color: Style.Colors.mainColor,
-                        child: Text(
-                          "Из устройства",
-                          style: TextStyle(color: Style.Colors.titleColor),
-                        ),
-                        onPressed: () {
-                          getImage(ImageSource.gallery);
-                        })
-                  ],
-                ),
-                _buildSendReportBtn(),
-              ],
-            ),
-          ),
-          (_inProcess)
-              ? Container(
-                  color: Colors.white,
-                  height: MediaQuery.of(context).size.height * 0.95,
-                  child: Center(
-                    child: buildLoadingWidget(),
-                  ),
-                )
-              : Center(),
-          StreamBuilder<ReportResponse>(
-              stream: sendReportBloc.subject.stream,
-              builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data.text == "Loading") {
-                    return Container(
-                      color: Style.Colors.mainColor,
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: buildLoadingWidget(),
-                    );
-                  } else {
-                    return Center();
-                  }
+      body: Column(
+        children: [
+          _buildAddTypeCheck(),
+          Expanded(
+            child: StreamBuilder(
+              stream: controlTypeBloc.addTypeStream,
+              initialData: controlTypeBloc.defAddType,
+              // ignore: missing_return
+              builder: (context, AsyncSnapshot<ControlTypeItem> snapshot) {
+                switch (snapshot.data) {
+                  case ControlTypeItem.ADD:
+                    return _buildAddReport();
+                  case ControlTypeItem.LIST:
+                    return _buildExamsView();
+                  // ignore: empty_statements
                 }
-                return SizedBox();
-              }),
+              },
+            ),
+          )
         ],
       ),
     );
+  }
+
+  Widget _buildExamsView() {
+    return StreamBuilder(
+        stream: getReportsBloc.subject.stream,
+        builder: (context, AsyncSnapshot<ReportsResponse> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              if (snapshot.data.error == "Авторизуйтесь") {
+                return buildAuthButton();
+              }
+              return Center(
+                child: Text(snapshot.data.error),
+              );
+            }
+            return _buildReportsList(snapshot.data);
+          } else if (snapshot.hasError) {
+            return Container();
+          } else {
+            return buildLoadingWidget();
+          }
+        });
+  }
+
+  Widget _buildReportsList(ReportsResponse lessonsResponse) {
+    List<ReportsModel> lessons = lessonsResponse.reports;
+    return ListView.builder(
+        itemCount: lessons.length,
+        itemBuilder: (context, index) {
+          return _buildReportsItem(lessons[index],index);
+        });
+  }
+
+  Widget _buildReportsItem(ReportsModel reportsModel,int index) {
+    DateTime dateTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(reportsModel.created);
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 8,
+        left: 8,
+        right: 8,
+      ),
+      child: Card(
+        elevation: 2,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Container(
+                height: 160,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5)),
+                  child: reportsModel.image != null
+                      ? Image.network(
+                          MobileRepository.mainUrl + reportsModel.image,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(color: Colors.red),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Заявки №${index+1}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom:8.0),
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Текст заявки: ${reportsModel.message}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        "Статус: ${reportsModel.status}",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        style: kHintTextStyle,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        "Опубликовано: ${dateTime.day}.${dateTime.month}.${dateTime.year}",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        style: kHintTextStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddReport() {
+    return Stack(
+      children: <Widget>[
+        SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildReportTextField(),
+              _buildSetPhotoLabel(),
+              getImageWidget(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  MaterialButton(
+                      elevation: 5,
+                      minWidth: 150,
+                      color: Style.Colors.titleColor,
+                      child: Text(
+                        "Камера",
+                        style: TextStyle(color: Style.Colors.mainColor),
+                      ),
+                      onPressed: () {
+                        getImage(ImageSource.camera);
+                      }),
+                  MaterialButton(
+                      elevation: 5,
+                      minWidth: 150,
+                      color: Style.Colors.mainColor,
+                      child: Text(
+                        "Из устройства",
+                        style: TextStyle(color: Style.Colors.titleColor),
+                      ),
+                      onPressed: () {
+                        getImage(ImageSource.gallery);
+                      })
+                ],
+              ),
+              _buildSendReportBtn(),
+            ],
+          ),
+        ),
+        (_inProcess)
+            ? Container(
+                color: Colors.white,
+                height: MediaQuery.of(context).size.height * 0.95,
+                child: Center(
+                  child: buildLoadingWidget(),
+                ),
+              )
+            : Center(),
+        StreamBuilder<ReportResponse>(
+            stream: sendReportBloc.subject.stream,
+            builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data.text == "Loading") {
+                  return Container(
+                    color: Style.Colors.mainColor,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: buildLoadingWidget(),
+                  );
+                } else {
+                  return Center();
+                }
+              }
+              return SizedBox();
+            }),
+      ],
+    );
+  }
+
+  Widget _buildAddTypeCheck() {
+    return StreamBuilder(
+        stream: controlTypeBloc.addTypeStream,
+        initialData: controlTypeBloc.defAddType,
+        builder: (context, AsyncSnapshot<ControlTypeItem> snapshot) {
+          return Container(
+            height: 60,
+            child: Row(
+              children: [
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    controlTypeBloc.pickWeek(0);
+                  },
+                  child: Container(
+                    color: Style.Colors.mainColor,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Добавить",
+                        style: snapshot.data == ControlTypeItem.ADD
+                            ? kAppBarEnableTextStyle
+                            : kAppBarDisableTextStyle,
+                      ),
+                    ),
+                  ),
+                )),
+                SizedBox(
+                  height: 25,
+                  width: 1,
+                  child: Container(
+                    color: Style.Colors.titleColor,
+                  ),
+                ),
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    controlTypeBloc.pickWeek(1);
+                  },
+                  child: Container(
+                    color: Style.Colors.mainColor,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Мои заявки",
+                        style: snapshot.data == ControlTypeItem.LIST
+                            ? kAppBarEnableTextStyle
+                            : kAppBarDisableTextStyle,
+                      ),
+                    ),
+                  ),
+                )),
+              ],
+            ),
+          );
+        });
   }
 }

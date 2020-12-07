@@ -4,10 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:kai_mobile_app/model/activitys_response.dart';
 import 'package:kai_mobile_app/model/news_response.dart';
 import 'package:kai_mobile_app/model/report_response.dart';
+import 'package:kai_mobile_app/model/reports_response.dart';
 
 class MobileRepository {
   static String mainUrl = "http://kaimobile.loliallen.com/";
   static String newsUrl = "api/posts/";
+  static String reportsUrl = "api/reports/";
   static String activitiesUrl = "api/activities/";
   static String sendReportUrl = "api/reports/";
   static String getDateUrl = "api/date/";
@@ -27,7 +29,7 @@ class MobileRepository {
       //var data = jsonDecode(response.data);
 
       var rest = response.data as List;
-      print(rest);
+      //print(rest);
       if (rest.isNotEmpty) {
         return NewsResponse.fromJson(response.data);
       } else {
@@ -36,6 +38,28 @@ class MobileRepository {
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
       return NewsResponse.withError("Нет сети");
+    }
+  }
+
+  Future<ReportsResponse> getReports() async {
+    var headers = {"Authorization": "Bearer $userToken"};
+    try {
+      Response response = await _dio.get(mainUrl + reportsUrl,
+          options: Options(
+            headers: headers,
+          ));
+      //var data = jsonDecode(response.data);
+
+      var rest = response.data as List;
+      print(rest);
+      if (rest.isNotEmpty) {
+        return ReportsResponse.fromJson(response.data);
+      } else {
+        return ReportsResponse.withError("Нет заявок");
+      }
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return ReportsResponse.withError("Нет сети");
     }
   }
 
@@ -49,7 +73,7 @@ class MobileRepository {
       //var data = jsonDecode(response.data);
 
       var rest = response.data as List;
-      print(rest);
+      //print(rest);
       if (rest.isNotEmpty) {
         return ActivitysResponse.fromJson(response.data);
       } else {
