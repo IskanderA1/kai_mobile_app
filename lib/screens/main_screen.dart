@@ -9,6 +9,7 @@ import 'package:kai_mobile_app/bloc/week_bloc.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 
 class MainScreen extends StatefulWidget {
@@ -19,6 +20,16 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
+    try {
+    IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
+    socket.onConnect((_) {
+     print('CONNECT');
+     //socket.emit('add_like', '4542e123...312313');
+    });
+    socket.connect();
+    } catch (e) {
+      print(e.toString());
+    }
     authBloc..authWithLocal();
     dayWeekBloc..getDay();
     getSemestrBloc..getSemestr();

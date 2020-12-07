@@ -6,6 +6,7 @@ import 'package:kai_mobile_app/screens/services/control_screen.dart';
 import 'package:kai_mobile_app/screens/services/doc_screen.dart';
 import 'package:kai_mobile_app/screens/services/exams_screen.dart';
 import 'package:kai_mobile_app/screens/services/lesson_screen.dart';
+
 import 'package:kai_mobile_app/screens/services/map_screen.dart';
 import 'package:kai_mobile_app/screens/services/my_group_screen.dart';
 import 'package:kai_mobile_app/screens/services/service_menu_screen.dart';

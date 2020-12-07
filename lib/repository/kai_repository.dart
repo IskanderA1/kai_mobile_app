@@ -4,6 +4,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:kai_mobile_app/bloc/get_exams_bloc.dart';
+import 'package:kai_mobile_app/model/exams_response.dart';
 import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
@@ -94,6 +96,7 @@ class KaiRepository {
     prefs.remove("login");
     prefs.remove("password");
     prefs.remove("userData");
+    prefs.remove("examssData");
     prefs.remove("lessonsData");
     prefs.remove("semestr");
     prefs.remove("group");
@@ -139,6 +142,48 @@ class KaiRepository {
     } else {
       print("Требуется авторизация");
       return LessonsResponse.withError("Авторизуйтесь");
+    }
+  }
+
+  Future<ExamsResponse> getExams() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var dataSP = prefs.getString("userData") != null ? jsonDecode(
+        prefs.getString("userData")) : null;
+    var lessonsSP = prefs.getString("examssData") != null ? jsonDecode(
+        prefs.getString("examssData")) : null;
+    if (dataSP != null) {
+      print("${dataSP["StudId"]}");
+      var params = {
+        "authToken": "{token}",
+        "runParams": "{\"PipelineId\":145877940,"
+            "\"StepId\":3,"
+            "\"OutputName\":\"Row\","
+            "\"Variables\":{"
+            "\"StudId\":\"${dataSP["StudId"]}\","
+            "}}",
+      };
+      try {
+        Response response = await _dio.get(mainUrl, queryParameters: params);
+
+        var data = jsonDecode(response.data.replaceAll(RegExp(r"\\"), "/"));
+        var rest = data["Data"] as List;
+        if (rest.isNotEmpty) {
+          print("${data["Data"][0]} test");
+          prefs.setString("examssData", jsonEncode(data));
+          return ExamsResponse.fromJson(data);
+        } else {
+          return ExamsResponse.withError("Авторизуйтесь");
+        }
+      } catch (error, stacktrace) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+        if (lessonsSP != null) {
+          return ExamsResponse.fromJson(lessonsSP);
+        }
+        return ExamsResponse.withError("Авторизуйтесь");
+      }
+    } else {
+      print("Требуется авторизация");
+      return ExamsResponse.withError("Авторизуйтесь");
     }
   }
 
