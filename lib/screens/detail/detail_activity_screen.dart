@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:kai_mobile_app/model/activity_model.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
-import 'package:kai_mobile_app/style/constant.dart';
+
 
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'dart:math' as math;
@@ -34,7 +34,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Style.Colors.titleColor,
+             
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -44,7 +44,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
             pinned: true,
             toolbarHeight: 60,
             expandedHeight: 240.0,
-            backgroundColor: Colors.white,
+        
             elevation: 0,
             flexibleSpace: _SliverAppBar(
               activityModel: _activityModel,
@@ -65,7 +65,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Row(
                             children: [
-                              Expanded(flex:1, child: Text("Руководитель: ",style: kLabelStyle,)),
+                              Expanded(flex:1, child: Text("Руководитель: ",style: Theme.of(context).textTheme.headline5,)),
                               Expanded(flex:2, child: Text("${_activityModel.leader}"))
                             ],
                           ),
@@ -74,7 +74,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Row(
                             children: [
-                              Expanded(flex:1, child: Text("Адрес: ",style: kLabelStyle,)),
+                              Expanded(flex:1, child: Text("Адрес: ",style: Theme.of(context).textTheme.headline5,)),
                               Expanded(flex:2, child: Text("${_activityModel.address}"))
                             ],
                           ),
@@ -83,7 +83,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Row(
                             children: [
-                              Expanded(flex:1, child: Text("Расписание: ",style: kLabelStyle,)),
+                              Expanded(flex:1, child: Text("Расписание: ",style: Theme.of(context).textTheme.headline5,)),
                               Expanded(flex:2, child: Text("${_activityModel.date}"))
                             ],
                           ),
@@ -92,7 +92,7 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Row(
                             children: [
-                              Expanded(flex:1, child: Text("Ссылки: ",style: kLabelStyle,)),
+                              Expanded(flex:1, child: Text("Ссылки: ",style: Theme.of(context).textTheme.headline5,)),
                               Expanded(flex:2, child: Linkify(text:"${_activityModel.links}",onOpen: (link) async {
     if (await canLaunch(link.url)) {
         await launch(link.url);
@@ -178,12 +178,7 @@ class _SliverAppBar extends StatelessWidget {
                         : 1,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Style.Colors.titleColor,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 18,
-                      fontFamily: 'OpenSans',
-                    ),
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
               ),

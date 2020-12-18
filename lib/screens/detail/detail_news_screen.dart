@@ -31,7 +31,7 @@ class _DetailNewsScreenState extends State<DetailNewsScreen> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Style.Colors.titleColor,
+                
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -41,7 +41,7 @@ class _DetailNewsScreenState extends State<DetailNewsScreen> {
             pinned: true,
             toolbarHeight: 60,
             expandedHeight: 240.0,
-            backgroundColor: Colors.white,
+
             elevation: 0,
             flexibleSpace: _SliverAppBar(newsModel: newsModel,),
           ),
@@ -146,7 +146,7 @@ class _SliverAppBar extends StatelessWidget {
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Style.Colors.titleColor,
+                
                   fontWeight: FontWeight.normal,
                   fontSize: 18,
                   fontFamily: 'OpenSans',

@@ -10,7 +10,6 @@ import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:kai_mobile_app/style/theme.dart' as Style;
 
 class MainScreen extends StatefulWidget {
   @override
@@ -75,23 +74,18 @@ class _MainScreenState extends State<MainScreen> {
         initialData: bottomNavBarBloc.defaultItem,
         builder: (BuildContext context, AsyncSnapshot<NavBarItem> snapshot) {
           return Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.grey[100], spreadRadius: 0, blurRadius: 2),
-              ],
-            ),
+          
             child: ClipRRect(
               child: BottomNavigationBar(
-                backgroundColor: Style.Colors.mainColor,
+                //backgroundColor: Style.Colors.mainColor,
                 iconSize: 20,
-                unselectedItemColor: Style.Colors.grey,
+                //unselectedItemColor: Style.Colors.grey,
                 unselectedFontSize: 9.5,
                 selectedFontSize: 9.5,
                 type: BottomNavigationBarType.shifting,
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
-                fixedColor: Style.Colors.titleColor,
+                //fixedColor: Style.Colors.titleColor,
                 currentIndex: snapshot.data.index,
                 onTap: (int i) {
                     bottomNavBarBloc.pickItem(i);

@@ -4,7 +4,7 @@ import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/user_response.dart';
 import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -26,7 +26,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                       flex: 6,
                       child: Container(
-                        decoration: kBoxImageBackgroundStyle,
+                      color: Theme.of(context).primaryColor,
+                        child: Image.asset('assets/placeholder.png',
+                            width: MediaQuery.of(context).size.width,)
                       )),
                   Expanded(
                       flex: 8,
@@ -85,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     margin: EdgeInsets.only(left: 30, right: 30),
                     height: 100,
                     width: 370,
-                    decoration: kBoxImageBackgroundStyle,
+                
                     child: _buildNameCard(snapshot.data),
                   ),
                 ),
@@ -100,23 +102,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildNameCard(UserResponse userResponse) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-      child: Column(children: [
-        Text(
-          userResponse.user.studFio,
-          style: kProfileTextStyle,
-          textAlign: TextAlign.center,
+    return Card(
+      elevation: 1,
+          child: Padding(
+          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+          child: Column(children: [
+      Text(
+        userResponse.user.studFio,
+        style: Theme.of(context).textTheme.headline1,
+        textAlign: TextAlign.center,
+      ),
+      SizedBox(
+        height: 8,
+      ),
+      Text(
+        "Номер зачетки: ${userResponse.user.zach}",
+        style: Theme.of(context).textTheme.subtitle1,
+        textAlign: TextAlign.center,
+      ),
+          ]),
         ),
-        SizedBox(
-          height: 8,
-        ),
-        Text(
-          "Номер зачетки: ${userResponse.user.zach}",
-          style: kSpanTextStyle,
-          textAlign: TextAlign.center,
-        ),
-      ]),
     );
   }
 
@@ -130,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon != null
                 ? Icon(
                     icon,
-                    color: Style.Colors.titleColor,
+                    color: Theme.of(context).accentColor,
                   )
                 : SizedBox(),
             SizedBox(
@@ -142,14 +147,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text(
                     label,
-                    style: kSpanTextStyle,
+                    style: Theme.of(context).textTheme.subtitle1,
                     textAlign: TextAlign.left,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width - 100,
                     child: Text(
                       userData,
-                      style: kDataTextStyle,
+                      style: Theme.of(context).textTheme.headline2,
                       textAlign: TextAlign.left,
                     ),
                   ),

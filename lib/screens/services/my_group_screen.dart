@@ -6,8 +6,7 @@ import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/group_mate_model.dart';
-import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 import 'package:url_launcher/url_launcher.dart';
 
 class MyGroupScreen extends StatefulWidget {
@@ -29,20 +28,19 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
         elevation: 0,
         title: Text(
           "Моя группа",
-          style: kAppBarTextStyle,
+      
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Style.Colors.titleColor,
+  
           ),
           onPressed: () {
             serviceMenu..backToMenu();
           },
         ),
         centerTitle: true,
-        backgroundColor: Style.Colors.mainColor,
-        shadowColor: Colors.grey[100],
+        
       ),
       body: StreamBuilder(
           stream: getGroupMateBloc.subject,
@@ -89,21 +87,19 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
           children: [
             Expanded(
               flex: 4,
-              child: Container(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                      groupMate.studentFIO,
-                    style: TextStyle(
-                      color: Colors.white,
+              child: Card(
+                elevation: 0,
+                  child: Container(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                        groupMate.studentFIO,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[500], width: 2.0),
-                  ),
-                  color: Style.Colors.titleColor,
+                  
                 ),
               ),
             ),
@@ -111,13 +107,9 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
                 flex: 6,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16.0,right: 16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey[200], width: 2.0),
-                      ),
-                      color: Colors.white,
-                    ),
+                  child: Container( 
+                    color: Theme.of(context).primaryColor,
+                    
                     child: Row(
                       children: [
 

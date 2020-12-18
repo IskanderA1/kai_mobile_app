@@ -8,8 +8,8 @@ import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/exam_model.dart';
 import 'package:kai_mobile_app/model/exams_response.dart';
 
-import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
+
 
 class ExamsScreen extends StatefulWidget {
   @override
@@ -37,7 +37,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Style.Colors.titleColor,
+            
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -45,11 +45,10 @@ class _ExamsScreenState extends State<ExamsScreen> {
         ),
         title: Text(
           "Экзамены",
-          style: kAppBarTextStyle,
         ),
         centerTitle: true,
-        backgroundColor: Style.Colors.mainColor,
-        shadowColor: Colors.grey[100],
+
+      
       ),
       body: _buildExamsView(),
     );
@@ -95,108 +94,105 @@ class _ExamsScreenState extends State<ExamsScreen> {
       padding: const EdgeInsets.only(
         top: 8,
       ),
-      child: Container(
-        height: 110,
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.grey[200], width: 1.0),
+      child: Card(
+              child: Container(
+          height: 110,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0, left: 8),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          examModel.examTime,
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Theme.of(context).accentColor,
+                            
+                          ),
+                        ),
+                        Text(
+                          "Здание: ${examModel.buildNum}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                           
+                          ),
+                        ),
+                        Text(
+                          "Ауд: ${examModel.audNum}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12,
+                           
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Expanded(
+                flex: 7,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16.0, right: 8),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          examModel.disciplineName,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
+                    
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "${examModel.prepodName}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                           
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                       Text(
+                                "${examModel.examDate}",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              )
+                            ,
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0, left: 8),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        examModel.examTime,
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Style.Colors.titleColor,
-                        ),
-                      ),
-                      Text(
-                        "Здание: ${examModel.buildNum}",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Style.Colors.standardTextColor,
-                        ),
-                      ),
-                      Text(
-                        "Ауд: ${examModel.audNum}",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Style.Colors.standardTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            Expanded(
-              flex: 7,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16.0, right: 8),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        examModel.disciplineName,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Style.Colors.titleColor,
-                        ),
-                      ),
-                  
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "${examModel.prepodName}",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Style.Colors.standardTextColor,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                     Text(
-                              "${examModel.examDate}",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                                color: Style.Colors.titleColor,
-                              ),
-                            )
-                          ,
-                    ],
-                  ),
-                ),
-              ),
-            )
-          ],
         ),
       ),
     );

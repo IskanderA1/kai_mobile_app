@@ -1,6 +1,6 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 Widget buildLoadingHorizontWidget() {
   return Center(
@@ -12,7 +12,7 @@ Widget buildLoadingHorizontWidget() {
         width: 50.0,
         child: SpinKitThreeBounce(
           size: 25,
-          color: Style.Colors.titleColor,
+          color: Color(0xFF3985c0),
         ),
       )
     ],

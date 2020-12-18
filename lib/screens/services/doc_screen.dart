@@ -17,7 +17,7 @@ class _DocScreenState extends State<DocScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Style.Colors.titleColor,
+    
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -25,11 +25,10 @@ class _DocScreenState extends State<DocScreen> {
         ),
         title: Text(
           "Документы",
-          style: kAppBarTextStyle,
+      
         ),
         centerTitle: true,
-        backgroundColor: Style.Colors.mainColor,
-        shadowColor: Colors.grey[100],
+
       ),
       body: Center(child: Text("Нет данных")),
     );

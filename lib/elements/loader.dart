@@ -1,6 +1,5 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
 
 Widget buildLoadingWidget() {
   return Center(
@@ -12,7 +11,7 @@ Widget buildLoadingWidget() {
         width: 50.0,
         child: SpinKitDoubleBounce(
           size: 50,
-          color: Style.Colors.titleColor,
+          color: Color(0xFF3985c0),
         ),
       )
     ],

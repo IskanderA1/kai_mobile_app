@@ -14,7 +14,7 @@ import 'package:kai_mobile_app/model/reports_model.dart';
 import 'package:kai_mobile_app/model/reports_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 class ControlScreen extends StatefulWidget {
   @override
@@ -48,12 +48,14 @@ class _ControlScreenState extends State<ControlScreen> {
         children: <Widget>[
           Container(
             alignment: Alignment.centerLeft,
-            decoration: kBoxDecorationStyle,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Theme.of(context).cardColor
+              ),
             height: 60.0,
             child: TextField(
               controller: _reportController,
               style: TextStyle(
-                color: Style.Colors.standardTextColor,
                 fontFamily: 'OpenSans',
               ),
               decoration: InputDecoration(
@@ -61,7 +63,7 @@ class _ControlScreenState extends State<ControlScreen> {
                 contentPadding: EdgeInsets.only(top: 14.0),
                 prefixIcon: Icon(
                   Icons.report,
-                  color: Style.Colors.titleColor,
+                  color:  Theme.of(context).accentColor,
                 ),
                 hintText: 'Введите проблему',
                 hintStyle: kHintTextStyle,
@@ -76,11 +78,12 @@ class _ControlScreenState extends State<ControlScreen> {
   Widget _buildSetPhotoLabel() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text("Добавьте фото", style: kLabelStyle),
+      child: Text("Добавьте фото", style: Theme.of(context).textTheme.headline5),
     );
   }
 
   final snackBar = SnackBar(
+    backgroundColor: Color(0xFF182633),
     content: StreamBuilder<ReportResponse>(
         stream: sendReportBloc.subject.stream,
         builder: (context, AsyncSnapshot<ReportResponse> snapshot) {
@@ -89,7 +92,7 @@ class _ControlScreenState extends State<ControlScreen> {
               return Text(
                 snapshot.data.text,
                 style: TextStyle(
-                  color: Style.Colors.mainColor,
+                  color: Color(0xFF3985c0),
                 ),
               );
             }
@@ -98,9 +101,10 @@ class _ControlScreenState extends State<ControlScreen> {
         }),
     action: SnackBarAction(
       label: 'Ок',
-      //textColor: Style.Colors.titleColor,
+      textColor:Colors.white,
       onPressed: () {},
     ),
+    
   );
 
   Widget _buildSendReportBtn() {
@@ -108,7 +112,7 @@ class _ControlScreenState extends State<ControlScreen> {
       padding: EdgeInsets.all(30.0),
       width: double.infinity,
       child: RaisedButton(
-        elevation: 5.0,
+        elevation: 0.0,
         onPressed: () async {
           await sendReportBloc.sendReport(
               _selectedFile, _reportController.text);
@@ -126,7 +130,7 @@ class _ControlScreenState extends State<ControlScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5.0),
         ),
-        color: Style.Colors.titleColor,
+        color: Theme.of(context).accentColor,
         child: Text(
           'Отправить',
           style: TextStyle(
@@ -170,12 +174,12 @@ class _ControlScreenState extends State<ControlScreen> {
           maxHeight: 700,
           compressFormat: ImageCompressFormat.jpg,
           androidUiSettings: AndroidUiSettings(
-            toolbarColor: Style.Colors.mainColor,
+            toolbarColor: Theme.of(context).primaryColor,
             toolbarTitle: "Обрезать",
-            statusBarColor: Style.Colors.titleColor,
+            statusBarColor: Theme.of(context).accentColor,
             backgroundColor: Colors.white,
-            toolbarWidgetColor: Style.Colors.titleColor,
-            activeControlsWidgetColor: Style.Colors.titleColor,
+            toolbarWidgetColor: Theme.of(context).accentColor,
+            activeControlsWidgetColor: Theme.of(context).accentColor,
           ));
 
       this.setState(() {
@@ -197,7 +201,6 @@ class _ControlScreenState extends State<ControlScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Style.Colors.titleColor,
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -205,11 +208,8 @@ class _ControlScreenState extends State<ControlScreen> {
         ),
         title: Text(
           "Контроль",
-          style: kAppBarTextStyle,
         ),
         centerTitle: true,
-        backgroundColor: Style.Colors.mainColor,
-        shadowColor: Colors.grey[100],
       ),
       body: Column(
         children: [
@@ -275,18 +275,11 @@ class _ControlScreenState extends State<ControlScreen> {
         right: 8,
       ),
       child: Card(
-        elevation: 2,
+        elevation: 1,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-            color: Colors.white,
+           
           ),
           child: Column(
             children: [
@@ -387,23 +380,25 @@ class _ControlScreenState extends State<ControlScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   MaterialButton(
-                      elevation: 5,
+                      elevation: 0,
                       minWidth: 150,
-                      color: Style.Colors.titleColor,
+                      highlightElevation: 3,
+                      color: Theme.of(context).accentColor,
                       child: Text(
                         "Камера",
-                        style: TextStyle(color: Style.Colors.mainColor),
+                        style: TextStyle(color: Theme.of(context).disabledColor),
                       ),
                       onPressed: () {
                         getImage(ImageSource.camera);
                       }),
                   MaterialButton(
-                      elevation: 5,
+                      elevation: 0,
                       minWidth: 150,
-                      color: Style.Colors.mainColor,
+                      color:  Theme.of(context).disabledColor,
+                      highlightElevation: 3,
                       child: Text(
                         "Из устройства",
-                        style: TextStyle(color: Style.Colors.titleColor),
+                        style: TextStyle(color:  Theme.of(context).accentColor),
                       ),
                       onPressed: () {
                         getImage(ImageSource.gallery);
@@ -429,7 +424,7 @@ class _ControlScreenState extends State<ControlScreen> {
               if (snapshot.hasData) {
                 if (snapshot.data.text == "Loading") {
                   return Container(
-                    color: Style.Colors.mainColor,
+                    color: Theme.of(context).scaffoldBackgroundColor,
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: buildLoadingWidget(),
@@ -451,6 +446,7 @@ class _ControlScreenState extends State<ControlScreen> {
         builder: (context, AsyncSnapshot<ControlTypeItem> snapshot) {
           return Container(
             height: 60,
+            color: Theme.of(context).primaryColor,
             child: Row(
               children: [
                 Expanded(
@@ -459,14 +455,14 @@ class _ControlScreenState extends State<ControlScreen> {
                     controlTypeBloc.pickWeek(0);
                   },
                   child: Container(
-                    color: Style.Colors.mainColor,
+                    
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
                         "Добавить",
                         style: snapshot.data == ControlTypeItem.ADD
-                            ? kAppBarEnableTextStyle
-                            : kAppBarDisableTextStyle,
+                            ? Theme.of(context).textTheme.headline3
+                            :Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -475,7 +471,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   height: 25,
                   width: 1,
                   child: Container(
-                    color: Style.Colors.titleColor,
+                    color: Theme.of(context).accentColor,
                   ),
                 ),
                 Expanded(
@@ -484,14 +480,14 @@ class _ControlScreenState extends State<ControlScreen> {
                     controlTypeBloc.pickWeek(1);
                   },
                   child: Container(
-                    color: Style.Colors.mainColor,
+                    
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
                         "Мои заявки",
                         style: snapshot.data == ControlTypeItem.LIST
-                            ? kAppBarEnableTextStyle
-                            : kAppBarDisableTextStyle,
+                            ? Theme.of(context).textTheme.headline3
+                            :Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),

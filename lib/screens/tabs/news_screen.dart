@@ -6,7 +6,6 @@ import 'package:kai_mobile_app/model/news_model.dart';
 import 'package:kai_mobile_app/model/news_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
 
 import '../detail/detail_news_screen.dart';
 
@@ -31,10 +30,10 @@ class _NewsScreenState extends State<NewsScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Style.Colors.mainColor,
+
           title: Text(
             "Новости",
-            style: kAppBarTextStyle,
+            
           ),
           centerTitle: true,
         ),
@@ -92,19 +91,9 @@ class _NewsScreenState extends State<NewsScreen> {
           right: 8,
         ),
         child: Card(
-          elevation: 2,
+          elevation: 1,
           child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6.0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-              color: Colors.white,
-            ),
+            
             child: Column(
               children: [
                 Container(
@@ -163,6 +152,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
                       style: kHintTextStyle,
+                    
                     ),
                   ),
                 ),

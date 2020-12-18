@@ -73,7 +73,7 @@ class MobileRepository {
       //var data = jsonDecode(response.data);
 
       var rest = response.data as List;
-      //print(rest);
+      print(response.data[0]['image']);
       if (rest.isNotEmpty) {
         return ActivitysResponse.fromJson(response.data);
       } else {

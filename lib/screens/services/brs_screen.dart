@@ -8,8 +8,7 @@ import 'package:kai_mobile_app/model/lesson_brs_model.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/semester_brs_model.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
-import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 class BRSScreen extends StatefulWidget {
   @override
@@ -47,7 +46,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                   leading: IconButton(
                     icon: Icon(
                         Icons.arrow_back,
-                      color: Style.Colors.titleColor,
+                      
                     ),
                     onPressed: () {
                       serviceMenu..backToMenu();
@@ -55,13 +54,10 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                   ),
                   title: Text(
                     "БРС",
-                    style: kAppBarTextStyle,
                   ),
                   centerTitle: true,
-                  backgroundColor: Style.Colors.mainColor,
-                  shadowColor: Colors.grey[100],
                   bottom: TabBar(
-                    labelColor: Style.Colors.titleColor,
+                    labelColor: Theme.of(context).accentColor,
                     tabs: snapshot.data.semesters.map((SemestrModel semester) {
                       return Tab(
                         text: semester.semesterNum.toString(),
@@ -87,7 +83,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Предмет",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Style.Colors.standardTextColor,
+                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -97,7 +93,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Аттестация",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Style.Colors.standardTextColor,
+                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -107,7 +103,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Итог",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: Style.Colors.standardTextColor,
+                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -178,7 +174,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                 child: Text(
                   lessonBRSModel.disciplineName,
                   style: TextStyle(
-                    color: Style.Colors.titleColor,
+                    color: Theme.of(context).accentColor,
                     fontSize: 14,
                   ),
                 )),
@@ -197,7 +193,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             lessonBRSModel.att1.toString(),
                             style: TextStyle(
-                              color: Style.Colors.standardTextColor,
+                             
                             ),
                           ),
                           SizedBox(
@@ -206,7 +202,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt1}",
                             style: TextStyle(
-                              color: Style.Colors.standardTextColor,
+                              
                               fontSize: 9,
                             ),
                           )
@@ -222,7 +218,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             lessonBRSModel.att2.toString(),
                             style: TextStyle(
-                              color: Style.Colors.standardTextColor,
+                              
                             ),
                           ),
                           SizedBox(
@@ -231,7 +227,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt2}",
                             style: TextStyle(
-                              color: Style.Colors.standardTextColor,
+                              
                               fontSize: 9,
                             ),
                           )
@@ -248,7 +244,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                             lessonBRSModel.att3.toString(),
                             style: TextStyle(
                               fontSize: 16,
-                              color: Style.Colors.standardTextColor,
+                              
                             ),
                           ),
                           SizedBox(
@@ -257,7 +253,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt3}",
                             style: TextStyle(
-                              color: Style.Colors.standardTextColor,
+                              
                               fontSize: 9,
                             ),
                           )
@@ -275,7 +271,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                   fontSize: 16,
                   color: lessonBRSModel.finBall > 50
                       ? Colors.lightGreen
-                      : Style.Colors.standardTextColor,
+                      : Theme.of(context).disabledColor,
                 ),
               ),
             )

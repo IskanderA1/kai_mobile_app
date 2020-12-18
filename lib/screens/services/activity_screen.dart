@@ -6,8 +6,7 @@ import 'package:kai_mobile_app/model/activity_model.dart';
 import 'package:kai_mobile_app/model/activitys_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/screens/detail/detail_activity_screen.dart';
-import 'package:kai_mobile_app/style/constant.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 class ActivityScreen extends StatefulWidget {
   @override
@@ -29,7 +28,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Style.Colors.titleColor,
+           
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -37,11 +36,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
         ),
         title: Text(
           "Активности",
-          style: kAppBarTextStyle,
+          
         ),
         centerTitle: true,
-        backgroundColor: Style.Colors.mainColor,
-        shadowColor: Colors.grey[100],
+      
       ),
       body: _buildNewsView(),
     );
@@ -90,69 +88,56 @@ class _ActivityScreenState extends State<ActivityScreen> {
         ),
         child: Card(
           elevation: 2,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 6.0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                Container(
-                  height: 160,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5)),
-                    child: Hero(
-                      tag: activityModel,
-                      child: activityModel.image != null
-                          ? Image.network(
-                              MobileRepository.mainUrl + activityModel.image,
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                              fit: BoxFit.cover,
-                            )
-                          : Container(color: Colors.red),
-                    ),
+          child: Column(
+            children: [
+              Container(
+                height: 160,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5)),
+                  child: Hero(
+                    tag: activityModel,
+                    child: activityModel.image != null
+                        ? Image.network(
+                            MobileRepository.mainUrl + activityModel.image,
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                          )
+                        : Container(color: Colors.red),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Hero(
-                        tag: activityModel.id,
-                        child: Text(
-                          activityModel.title,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Hero(
+                      tag: activityModel.id,
+                      child: Text(
+                        activityModel.title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
                         ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 24.0, right: 8, left: 8),
-                  child: Text(
-                    activityModel.desc,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
-                    style: TextStyle(fontSize: 12),
-                  ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(bottom: 24.0, right: 8, left: 8),
+                child: Text(
+                  activityModel.desc,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 4,
+                  style: TextStyle(fontSize: 12),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
-import 'package:kai_mobile_app/style/theme.dart' as Style;
+
 
 Widget buildAuthButton(){
   return Center(
@@ -14,7 +14,7 @@ Widget buildAuthButton(){
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5.0),
       ),
-      color: Style.Colors.titleColor,
+      color: Color(0xFF3985c0),
       onPressed: (){
         bottomNavBarBloc..pickItem(3);
       },
