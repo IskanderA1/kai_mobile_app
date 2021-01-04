@@ -10,28 +10,27 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  StreamBuilder(
-        stream: themeBloc.itemStream,
-        initialData: themeBloc.defaultItem,
-        // ignore: missing_return
-        builder: (context, AsyncSnapshot<ThemeItem> snapshot) {
-          switch (snapshot.data) {
-            case ThemeItem.LIGHT:
-              return MaterialApp(
-                title: 'KaiMobile',
-                theme: themeLight,
-                home: MainScreen(),
-                );
-            case ThemeItem.DARK:
-              return MaterialApp(
-                title: 'KaiMobile',
-                theme: themeDark,
-                home: MainScreen(),
-                );
-          }
-        },
+    return StreamBuilder(
+      stream: themeBloc.itemStream,
+      initialData: themeBloc.defaultItem,
+      // ignore: missing_return
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.data) {
+          return MaterialApp(
+            title: 'KaiMobile',
+            theme: themeLight,
+            home: MainScreen(),
+          );
+        } else {
+          return MaterialApp(
+            title: 'KaiMobile',
+            theme: themeDark,
+            home: MainScreen(),
+          );
+        }
+      
+        }
       
     );
   }
- 
 }

@@ -1,10 +1,11 @@
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
+import 'package:kai_mobile_app/bloc/theme_bloc.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/user_response.dart';
 import 'package:kai_mobile_app/style/constant.dart';
-
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -12,10 +13,27 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+ // bool isDarkModeEnabled;
+  @override
+  void initState() {
+    super.initState();
+    // // ignore: unrelated_type_equality_checks
+    // if (themeBloc.itemStream == ThemeItem.LIGHT) {
+    //   isDarkModeEnabled = false;
+    //   // ignore: unrelated_type_equality_checks
+    // } else if (themeBloc.itemStream.last == ThemeItem.DARK) {
+    //   isDarkModeEnabled = true;
+    // } else {
+    //   isDarkModeEnabled = false;
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {return false;},
+      onWillPop: () async {
+        return false;
+      },
       child: StreamBuilder<UserResponse>(
         stream: authBloc.subject.stream,
         builder: (context, AsyncSnapshot<UserResponse> snapshot) {
@@ -26,10 +44,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                       flex: 6,
                       child: Container(
-                      color: Theme.of(context).primaryColor,
-                        child: Image.asset('assets/placeholder.png',
-                            width: MediaQuery.of(context).size.width,)
-                      )),
+                          color: Theme.of(context).primaryColor,
+                          child: Image.asset(
+                            'assets/placeholder.png',
+                            width: MediaQuery.of(context).size.width,
+                          ))),
                   Expanded(
                       flex: 8,
                       child: Padding(
@@ -68,15 +87,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   "Выйти",
                                   style: kExitStyleText,
+                                ),
+                              ],
                             ),
-                          ],
-                      ),
-                      onTap: () {
-                          authBloc..authLogOut(getSemestrBloc.subject.value.semesters.length!=null?getSemestrBloc.subject.value.semesters.length:0);
-                      },
-                    ),
+                            onTap: () {
+                              authBloc
+                                ..authLogOut(getSemestrBloc
+                                            .subject.value.semesters.length !=
+                                        null
+                                    ? getSemestrBloc
+                                        .subject.value.semesters.length
+                                    : 0);
+                            },
+                          ),
                         ),
-                  ))
+                      ))
                 ],
               ),
               Positioned.fill(
@@ -87,8 +112,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     margin: EdgeInsets.only(left: 30, right: 30),
                     height: 100,
                     width: 370,
-                
                     child: _buildNameCard(snapshot.data),
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                top: 8,
+                right: 16,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    //margin: EdgeInsets.only(left: 30, right: 30),
+                    height: 50,
+                    width: 50,
+                    child: _buildSwithcButton(),
                   ),
                 ),
               ),
@@ -101,27 +138,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _buildSwithcButton() {
+    return StreamBuilder(
+        stream: themeBloc.itemStream,
+        // ignore: missing_return
+        builder: (context, AsyncSnapshot<bool> snapshot) {
+          return DayNightSwitcher(
+            isDarkModeEnabled: snapshot.data==null?true:!snapshot.data,
+            onStateChanged: (isDarkModeEnabled) {
+              themeBloc
+                  .pickItem(!isDarkModeEnabled);
+      
+            },
+          );
+        });
+  }
+
   Widget _buildNameCard(UserResponse userResponse) {
     return Card(
       elevation: 1,
-          child: Padding(
-          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-          child: Column(children: [
-      Text(
-        userResponse.user.studFio,
-        style: Theme.of(context).textTheme.headline1,
-        textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+        child: Column(children: [
+          Text(
+            userResponse.user.studFio,
+            style: Theme.of(context).textTheme.headline1,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            "Номер зачетки: ${userResponse.user.zach}",
+            style: Theme.of(context).textTheme.subtitle1,
+            textAlign: TextAlign.center,
+          ),
+        ]),
       ),
-      SizedBox(
-        height: 8,
-      ),
-      Text(
-        "Номер зачетки: ${userResponse.user.zach}",
-        style: Theme.of(context).textTheme.subtitle1,
-        textAlign: TextAlign.center,
-      ),
-          ]),
-        ),
     );
   }
 

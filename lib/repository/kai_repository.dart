@@ -99,6 +99,7 @@ class KaiRepository {
     prefs.remove("lessonsData");
     prefs.remove("semestr");
     prefs.remove("group");
+    prefs.remove("userTheme");
     return UserResponse.withError("Авторизуйтесь");
   }
 

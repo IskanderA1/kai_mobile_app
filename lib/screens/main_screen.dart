@@ -5,6 +5,7 @@ import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/bloc/theme_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
@@ -20,15 +21,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     try {
-    IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
-    socket.onConnect((_) {
-     print('CONNECT');
-     //socket.emit('add_like', '4542e123...312313');
-    });
-    socket.connect();
+      IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
+      socket.onConnect((_) {
+        print('CONNECT');
+        //socket.emit('add_like', '4542e123...312313');
+      });
+      socket.connect();
     } catch (e) {
       print(e.toString());
     }
+    themeBloc.getUserTheme();
     authBloc..authWithLocal();
     dayWeekBloc..getDay();
     getSemestrBloc..getSemestr();
@@ -74,7 +76,6 @@ class _MainScreenState extends State<MainScreen> {
         initialData: bottomNavBarBloc.defaultItem,
         builder: (BuildContext context, AsyncSnapshot<NavBarItem> snapshot) {
           return Container(
-          
             child: ClipRRect(
               child: BottomNavigationBar(
                 //backgroundColor: Style.Colors.mainColor,
@@ -88,8 +89,8 @@ class _MainScreenState extends State<MainScreen> {
                 //fixedColor: Style.Colors.titleColor,
                 currentIndex: snapshot.data.index,
                 onTap: (int i) {
-                    bottomNavBarBloc.pickItem(i);
-                  },
+                  bottomNavBarBloc.pickItem(i);
+                },
                 items: [
                   BottomNavigationBarItem(
                     label: "",

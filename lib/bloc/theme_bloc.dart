@@ -1,26 +1,35 @@
 import 'dart:async';
 
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum ThemeItem { LIGHT, DARK }
 
 class ThemeBloc {
-  final StreamController<ThemeItem> _themController =
-      StreamController<ThemeItem>.broadcast();
+  final BehaviorSubject<bool> _themController =
+      BehaviorSubject<bool>();
 
-  ThemeItem defaultItem = ThemeItem.LIGHT;
-  Stream<ThemeItem> get itemStream => _themController.stream;
+  bool defaultItem = true;
+  Stream<bool> get itemStream => _themController.stream;
 
-  void pickItem(int i) {
-    switch (i) {
-      case 0:
-        _themController.sink.add(ThemeItem.LIGHT);
-        break;
-      case 1:
-        serviceMenu.backToMenu();
-        _themController.sink.add(ThemeItem.DARK);
-        break;
+  Future<void> pickItem(bool i) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (i) {
+      _themController.sink.add(true);
+      prefs.setBool("userTheme", true);
+    } else {
+      _themController.sink.add(false);
+      prefs.setBool("userTheme", false);
+
     }
+  }
+
+  Future<void> getUserTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool userTheme =
+        prefs.getBool("userTheme") != null ? prefs.getBool("userTheme") : true;
+    pickItem(userTheme);
   }
 
   close() {

@@ -28,6 +28,7 @@ dependencies:
   image_picker: ^0.6.3+1
   image_cropper: ^1.2.0
   socket_io_client: ^0.9.12
+  day_night_switcher: ^0.1.1+1
 
 
 dev_dependencies:

@@ -386,7 +386,7 @@ class _ControlScreenState extends State<ControlScreen> {
                       color: Theme.of(context).accentColor,
                       child: Text(
                         "Камера",
-                        style: TextStyle(color: Theme.of(context).disabledColor),
+                        style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
                         getImage(ImageSource.camera);
@@ -394,7 +394,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   MaterialButton(
                       elevation: 0,
                       minWidth: 150,
-                      color:  Theme.of(context).disabledColor,
+                      color: Colors.white,
                       highlightElevation: 3,
                       child: Text(
                         "Из устройства",

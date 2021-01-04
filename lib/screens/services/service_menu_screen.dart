@@ -124,6 +124,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
                 ).createShader(bounds),      
                 child: Icon(
                 icon,
+                color: Colors.white,
                 size: 40,
               ),
             ),

@@ -90,6 +90,7 @@ class _MyGroupScreenState extends State<MyGroupScreen> {
               child: Card(
                 elevation: 0,
                   child: Container(
+                    color: Theme.of(context).accentColor,
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
