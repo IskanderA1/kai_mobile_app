@@ -305,7 +305,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Заявки №${index+1}",
+                      "Заявка №${index+1}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
