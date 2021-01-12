@@ -1,23 +1,40 @@
+import 'package:dio/dio.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
+import 'package:kai_mobile_app/model/semester_response.dart';
 import 'package:kai_mobile_app/repository/kai_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class GetBRSLessonBloc{
+class GetBRSLessonBloc {
   final KaiRepository repository = KaiRepository();
-  final BehaviorSubject<List<LessonsBRSResponse>> _subject = BehaviorSubject<List<LessonsBRSResponse>>();
+  final BehaviorSubject<LessonsBRSResponsesList> _subject =
+      BehaviorSubject<LessonsBRSResponsesList>();
 
-  getBrsLessons(int semesterNum) async{
+  getBrsLessons(int semesterNum) async {
+    _subject.sink.add(LessonsBRSResponsesListLoading());
     List<LessonsBRSResponse> response = List();
-    for(int i = 1; i<=semesterNum;i++){
-      response.add(await repository.getLessonsBRS(i));
+    LessonsBRSResponse lResponse;
+    bool _hasErrors;
+    for (int i = 1; i <= semesterNum; i++) {
+      lResponse = await repository.getLessonsBRS(i);
+      response.add(lResponse);
+      if (lResponse is LessonsBRSResponseOk) {
+        _hasErrors = false;
+      } else if (lResponse is LessonsBRSResponseWithErrors) {
+        _hasErrors = true;
+      }
     }
-    _subject.sink.add(response);
+    if (_hasErrors) {
+      _subject.sink.add(LessonsBRSResponsesListWithErrors("Ошибка"));
+    } else {
+      _subject.sink.add(LessonsBRSResponsesListOK(response));
+    }
   }
+
   dispose() {
     _subject.close();
   }
 
-  BehaviorSubject<List<LessonsBRSResponse>> get subject => _subject;
-
+  BehaviorSubject<LessonsBRSResponsesList> get subject => _subject;
 }
+
 final getBRSLessonsBloc = GetBRSLessonBloc();

@@ -8,7 +8,7 @@ import 'package:kai_mobile_app/model/lesson_brs_model.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/semester_brs_model.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
-
+import 'package:kai_mobile_app/model/user_response.dart';
 
 class BRSScreen extends StatefulWidget {
   @override
@@ -28,10 +28,17 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
         stream: getSemestrBloc.subject,
         builder: (context, AsyncSnapshot<SemesterResponse> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              if(snapshot.data.error == "Авторизуйтесь"){
+            /*if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+              if (snapshot.data.error == "Авторизуйтесь") {
                 return buildAuthButton();
               }
+              return Center(
+                child: Text(snapshot.data.error),
+              );
+            }*/
+            if (snapshot.data is SemesterResponseUserUnLogged) {
+              return buildAuthButton();
+            } else if (snapshot.data is SemesterResponseWithError) {
               return Center(
                 child: Text(snapshot.data.error),
               );
@@ -45,8 +52,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                   elevation: 0,
                   leading: IconButton(
                     icon: Icon(
-                        Icons.arrow_back,
-                      
+                      Icons.arrow_back,
                     ),
                     onPressed: () {
                       serviceMenu..backToMenu();
@@ -83,7 +89,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Предмет",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -93,7 +98,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Аттестация",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -103,7 +107,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                                       "Итог",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        
                                         fontSize: 16,
                                       ),
                                     )),
@@ -135,17 +138,16 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
   Widget _buildBRSView(int semsetrNum) {
     return StreamBuilder(
         stream: getBRSLessonsBloc.subject.stream,
-        builder: (context, AsyncSnapshot<List<LessonsBRSResponse>> snapshot) {
+        builder: (context, AsyncSnapshot<LessonsBRSResponsesList> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data[semsetrNum - 1].error != null &&
-                snapshot.data[semsetrNum - 1].error.length > 0) {
+            if (snapshot.data is LessonsBRSResponsesListLoading) {
+              return buildLoadingWidget();
+            } else if (snapshot.data is LessonsBRSResponsesListOK) {
+              return _buildBRSList(snapshot
+                  .data.lessonsBRSResponsesList[semsetrNum - 1].lessonsBRS);
+            } else {
               return Container();
             }
-            if (snapshot.data.length < semsetrNum) {
-              return buildLoadingWidget();
-            }
-            print("Размер = ${snapshot.data.length}");
-            return _buildBRSList(snapshot.data[semsetrNum - 1].lessonsBRS);
           } else if (snapshot.hasError) {
             return Container();
           } else {
@@ -155,7 +157,8 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildBRSList(List<LessonBRSModel> brsList) {
-    return ListView.builder(
+    return ListView.separated(
+        separatorBuilder: (ctx, index) => Divider(color: Colors.black),
         itemCount: brsList.length,
         itemBuilder: (context, index) {
           return _buildBRSItem(brsList[index]);
@@ -192,9 +195,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                         children: [
                           Text(
                             lessonBRSModel.att1.toString(),
-                            style: TextStyle(
-                             
-                            ),
+                            style: TextStyle(),
                           ),
                           SizedBox(
                             height: 4,
@@ -202,7 +203,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt1}",
                             style: TextStyle(
-                              
                               fontSize: 9,
                             ),
                           )
@@ -217,9 +217,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                         children: [
                           Text(
                             lessonBRSModel.att2.toString(),
-                            style: TextStyle(
-                              
-                            ),
+                            style: TextStyle(),
                           ),
                           SizedBox(
                             height: 4,
@@ -227,7 +225,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt2}",
                             style: TextStyle(
-                              
                               fontSize: 9,
                             ),
                           )
@@ -244,7 +241,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                             lessonBRSModel.att3.toString(),
                             style: TextStyle(
                               fontSize: 16,
-                              
                             ),
                           ),
                           SizedBox(
@@ -253,7 +249,6 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                           Text(
                             "из ${lessonBRSModel.maxAtt3}",
                             style: TextStyle(
-                              
                               fontSize: 9,
                             ),
                           )

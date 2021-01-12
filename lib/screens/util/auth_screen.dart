@@ -6,7 +6,6 @@ import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'package:kai_mobile_app/style/constant.dart';
 
 class AuthScreen extends StatefulWidget {
-
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -21,6 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
     passController.clear();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -152,23 +152,21 @@ class _AuthScreenState extends State<AuthScreen> {
     return Container(
       height: 30.0,
       alignment: Alignment.bottomCenter,
-      child:  StreamBuilder<UserResponse>(
-            stream: authBloc.subject.stream,
-            builder: (context, AsyncSnapshot<UserResponse> snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data.error != null &&
-                    snapshot.data.error.length > 0) {
-                  return Text(
-                    snapshot.data.error,
-                      style: kLabelStyle,
-                  );
-                }
+      child: StreamBuilder<UserResponse>(
+          stream: authBloc.subject.stream,
+          builder: (context, AsyncSnapshot<UserResponse> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data is UserResponseWithErrors) {
+                return Text(
+                  snapshot.data.error,
+                  style: kLabelStyle,
+                );
               }
-              return SizedBox();
-            }),
+            }
+            return SizedBox();
+          }),
     );
   }
-
 
   Widget _buildLoginBtn() {
     return Container(

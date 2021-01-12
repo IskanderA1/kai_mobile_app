@@ -39,14 +39,14 @@ class MobileRepository {
         prefs.setString("authToken", data["user"]["token"]["value"]);
         prefs.setString("userData", jsonEncode(data["user"]));
         //print(response.data);
-        return UserResponse.fromJson(data["user"]);
+        return UserResponseLoggedIn(data["user"]);
       } else {
         print("Неверный логин или пароль");
-        return UserResponse.withError("Неверный логин или пароль");
+        return UserResponseLoggetOut("Неверный логин или пароль");
       }
     } catch (error, stacktrace) {
       print("Exception occured: $error stackTrace: $stacktrace");
-      return UserResponse.withError("Неверный логин или пароль");
+      return UserResponseLoggetOut("Неверный логин или пароль");
     }
   }
 
@@ -69,17 +69,17 @@ class MobileRepository {
         if (response.statusCode >= 200 && response.statusCode < 300) {
           prefs.setString("authToken", data["user"]["token"]["value"]);
           prefs.setString("userData", jsonEncode(data["user"]));
-          return UserResponse.fromJson(data["user"]);
+          return UserResponseLoggedIn(data["user"]);
         } else {
           print("Авторизуйтесь");
-          return UserResponse.withError("Авторизуйтесь");
+          return UserResponseLoggetOut("Авторизуйтесь");
         }
       } catch (error) {
         //print("Exception occured: $error stackTrace: $stacktrace");
-        return UserResponse.fromJson(dataSP);
+        return UserResponseLoggedIn(dataSP);
       }
     } else {
-      return UserResponse.withError("Авторизуйтесь");
+      return UserResponseLoggetOut("Авторизуйтесь");
     }
   }
 
@@ -98,7 +98,7 @@ class MobileRepository {
     prefs.remove("currWeek");
     prefs.remove("group");
     prefs.remove("userTheme");
-    return UserResponse.withError("Авторизуйтесь");
+    return UserResponseLoggetOut("Авторизуйтесь");
   }
 
   Future<NewsResponse> getNews() async {

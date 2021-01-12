@@ -1,6 +1,3 @@
-
-
-
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -105,10 +102,12 @@ class KaiRepository {
 
   Future<LessonsResponse> getLessons() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null ? jsonDecode(
-        prefs.getString("userData")) : null;
-    var lessonsSP = prefs.getString("lessonsData") != null ? jsonDecode(
-        prefs.getString("lessonsData")) : null;
+    var dataSP = prefs.getString("userData") != null
+        ? jsonDecode(prefs.getString("userData"))
+        : null;
+    var lessonsSP = prefs.getString("lessonsData") != null
+        ? jsonDecode(prefs.getString("lessonsData"))
+        : null;
     if (dataSP != null) {
       print("${dataSP["stud_id"]}");
       var params = {
@@ -147,10 +146,12 @@ class KaiRepository {
 
   Future<ExamsResponse> getExams() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null ? jsonDecode(
-        prefs.getString("userData")) : null;
-    var lessonsSP = prefs.getString("examssData") != null ? jsonDecode(
-        prefs.getString("examssData")) : null;
+    var dataSP = prefs.getString("userData") != null
+        ? jsonDecode(prefs.getString("userData"))
+        : null;
+    var lessonsSP = prefs.getString("examssData") != null
+        ? jsonDecode(prefs.getString("examssData"))
+        : null;
     if (dataSP != null) {
       print("${dataSP["stud_id"]}");
       var params = {
@@ -189,10 +190,12 @@ class KaiRepository {
 
   Future<SemesterResponse> getSemestr() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null ? jsonDecode(
-        prefs.getString("userData")) : null;
-    var semestrSP = prefs.getString("semestr") != null ? jsonDecode(
-        prefs.getString("semestr")) : null;
+    var dataSP = prefs.getString("userData") != null
+        ? jsonDecode(prefs.getString("userData"))
+        : null;
+    var semestrSP = prefs.getString("semestr") != null
+        ? jsonDecode(prefs.getString("semestr"))
+        : null;
     if (dataSP != null) {
       print("${dataSP["stud_id"]}");
       var params = {
@@ -211,29 +214,31 @@ class KaiRepository {
         if (rest.isNotEmpty) {
           print("${data["Data"][0]} test");
           prefs.setString("semestr", jsonEncode(data["Data"][0]));
-          return SemesterResponse.fromJson(data["Data"][0]);
+          return SemesterResponseUserLoggedIn(data["Data"][0]);
         } else {
-          return SemesterResponse.withError("Нет данных");
+          return SemesterResponseWithError("Нет данных");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (semestrSP != null) {
-          return SemesterResponse.fromJson(semestrSP);
+          return SemesterResponseUserLoggedIn(semestrSP);
         }
-        return SemesterResponse.withError("Авторизуйтесь");
+        return SemesterResponseUserUnLogged();
       }
     } else {
       print("Требуется авторизация");
-      return SemesterResponse.withError("Авторизуйтесь");
+      return SemesterResponseUserUnLogged();
     }
   }
 
   Future<LessonsBRSResponse> getLessonsBRS(int semesterNum) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null ? jsonDecode(
-        prefs.getString("userData")) : null;
-    var lessonsBRSSP = prefs.getString("brs$semesterNum") != null ? jsonDecode(
-        prefs.getString("brs$semesterNum")) : null;
+    var dataSP = prefs.getString("userData") != null
+        ? jsonDecode(prefs.getString("userData"))
+        : null;
+    var lessonsBRSSP = prefs.getString("brs$semesterNum") != null
+        ? jsonDecode(prefs.getString("brs$semesterNum"))
+        : null;
     if (dataSP != null) {
       print("${dataSP["stud_id"]}");
       var params = {
@@ -252,29 +257,31 @@ class KaiRepository {
         if (rest.isNotEmpty) {
           print("BRS: ${data["Data"][0]}");
           prefs.setString("brs$semesterNum", jsonEncode(data));
-          return LessonsBRSResponse.fromJson(data);
+          return LessonsBRSResponseOk(data);
         } else {
-          return LessonsBRSResponse.withError("Авторизуйтесь");
+          return LessonsBRSResponseWithErrors("Авторизуйтесь");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (lessonsBRSSP != null) {
-          return LessonsBRSResponse.fromJson(lessonsBRSSP);
+          return LessonsBRSResponseOk(lessonsBRSSP);
         }
-        return LessonsBRSResponse.withError("Авторизуйтесь");
+        return LessonsBRSResponseWithErrors("Авторизуйтесь");
       }
     } else {
       print("Требуется авторизация");
-      return LessonsBRSResponse.withError("Авторизуйтесь");
+      return LessonsBRSResponseWithErrors("Авторизуйтесь");
     }
   }
 
   Future<GroupMateResponse> getGroup() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataSP = prefs.getString("userData") != null ? jsonDecode(
-        prefs.getString("userData")) : null;
-    var groupSP = prefs.getString("group") != null ? jsonDecode(
-        prefs.getString("group")) : null;
+    var dataSP = prefs.getString("userData") != null
+        ? jsonDecode(prefs.getString("userData"))
+        : null;
+    var groupSP = prefs.getString("group") != null
+        ? jsonDecode(prefs.getString("group"))
+        : null;
     if (dataSP != null) {
       print("${dataSP["stud_id"]}");
       var params = {

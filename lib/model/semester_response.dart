@@ -10,12 +10,27 @@ class SemesterResponse {
       : this.semesters = List(),
         this.error = errorValue;
 
-  SemesterResponse.fromJson(var data){
+  SemesterResponse.fromJson(var data) {
     this.semesters = List();
-    for(int i = 1; i<=SemestrModel.fromJson(data).semesterNum;i++){
+    for (int i = 1; i <= SemestrModel.fromJson(data).semesterNum; i++) {
       this.semesters.add(SemestrModel.withNum(i));
     }
     this.error = "";
   }
+}
 
+class SemesterResponseUserUnLogged extends SemesterResponse {
+  SemesterResponseUserUnLogged() : super.withError("Авторизуйтесь");
+}
+
+class SemesterResponseUserLoggedIn extends SemesterResponse {
+  SemesterResponseUserLoggedIn(var data) : super.fromJson(data);
+}
+
+class SemesterResponseWithError extends SemesterResponse {
+  SemesterResponseWithError(String str) : super.withError(str);
+}
+
+class SemesterResponseLoading extends SemesterResponse {
+  SemesterResponseLoading(String str) : super.withError(str);
 }
