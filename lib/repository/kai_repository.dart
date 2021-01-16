@@ -6,7 +6,6 @@ import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
-import 'package:kai_mobile_app/model/user_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KaiRepository {

@@ -15,7 +15,6 @@ import 'package:kai_mobile_app/model/reports_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 
-
 class ControlScreen extends StatefulWidget {
   @override
   _ControlScreenState createState() => _ControlScreenState();
@@ -49,9 +48,8 @@ class _ControlScreenState extends State<ControlScreen> {
           Container(
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Theme.of(context).cardColor
-              ),
+                borderRadius: BorderRadius.circular(10.0),
+                color: Theme.of(context).cardColor),
             height: 60.0,
             child: TextField(
               controller: _reportController,
@@ -59,12 +57,81 @@ class _ControlScreenState extends State<ControlScreen> {
                 fontFamily: 'OpenSans',
               ),
               decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(top: 14.0),
-                prefixIcon: Icon(
-                  Icons.report,
-                  color:  Theme.of(context).accentColor,
+                icon: IconButton(
+                  icon: Icon(
+                    Icons.report,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          elevation: 20,
+                          actions: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, right: 20),
+                              child: FlatButton(
+                                child: Text('Ok'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ],
+                          content: Container(
+                            height: 300,
+                            padding: EdgeInsets.all(15),
+                            alignment: Alignment.center,
+                            child: Text(
+                              controlInformation,
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        );
+                      }),
                 ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(bottom: 5),
+                /*prefix: IconButton(
+                  icon: Icon(
+                    Icons.report,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          elevation: 15,
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: FlatButton(
+                                child: Text('Ok'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ],
+                          content: Container(
+                            height: 300,
+                            padding: EdgeInsets.all(25),
+                            alignment: Alignment.center,
+                            child: Text(
+                              controlInformation,
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ),
+                        );
+                      }),
+                ),*/
                 hintText: 'Введите проблему',
                 hintStyle: kHintTextStyle,
               ),
@@ -78,7 +145,8 @@ class _ControlScreenState extends State<ControlScreen> {
   Widget _buildSetPhotoLabel() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text("Добавьте фото", style: Theme.of(context).textTheme.headline5),
+      child:
+          Text("Добавьте фото", style: Theme.of(context).textTheme.headline5),
     );
   }
 
@@ -101,10 +169,9 @@ class _ControlScreenState extends State<ControlScreen> {
         }),
     action: SnackBarAction(
       label: 'Ок',
-      textColor:Colors.white,
+      textColor: Colors.white,
       onPressed: () {},
     ),
-    
   );
 
   Widget _buildSendReportBtn() {
@@ -262,12 +329,13 @@ class _ControlScreenState extends State<ControlScreen> {
     return ListView.builder(
         itemCount: lessons.length,
         itemBuilder: (context, index) {
-          return _buildReportsItem(lessons[index],index);
+          return _buildReportsItem(lessons[index], index);
         });
   }
 
-  Widget _buildReportsItem(ReportsModel reportsModel,int index) {
-    DateTime dateTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(reportsModel.created);
+  Widget _buildReportsItem(ReportsModel reportsModel, int index) {
+    DateTime dateTime =
+        DateFormat("yyyy-MM-ddTHH:mm:ss").parse(reportsModel.created);
     return Padding(
       padding: const EdgeInsets.only(
         top: 8,
@@ -279,7 +347,6 @@ class _ControlScreenState extends State<ControlScreen> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-           
           ),
           child: Column(
             children: [
@@ -305,7 +372,7 @@ class _ControlScreenState extends State<ControlScreen> {
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Заявка №${index+1}",
+                      "Заявка №${index + 1}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
@@ -315,7 +382,7 @@ class _ControlScreenState extends State<ControlScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom:8.0),
+                padding: const EdgeInsets.only(bottom: 8.0),
                 child: Container(
                   child: Align(
                     alignment: Alignment.center,
@@ -329,7 +396,6 @@ class _ControlScreenState extends State<ControlScreen> {
                   ),
                 ),
               ),
-            
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -398,7 +464,7 @@ class _ControlScreenState extends State<ControlScreen> {
                       highlightElevation: 3,
                       child: Text(
                         "Из устройства",
-                        style: TextStyle(color:  Theme.of(context).accentColor),
+                        style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       onPressed: () {
                         getImage(ImageSource.gallery);
@@ -455,14 +521,13 @@ class _ControlScreenState extends State<ControlScreen> {
                     controlTypeBloc.pickWeek(0);
                   },
                   child: Container(
-                    
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
                         "Добавить",
                         style: snapshot.data == ControlTypeItem.ADD
                             ? Theme.of(context).textTheme.headline3
-                            :Theme.of(context).textTheme.headline4,
+                            : Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),
@@ -480,14 +545,13 @@ class _ControlScreenState extends State<ControlScreen> {
                     controlTypeBloc.pickWeek(1);
                   },
                   child: Container(
-                    
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
                         "Мои заявки",
                         style: snapshot.data == ControlTypeItem.LIST
                             ? Theme.of(context).textTheme.headline3
-                            :Theme.of(context).textTheme.headline4,
+                            : Theme.of(context).textTheme.headline4,
                       ),
                     ),
                   ),

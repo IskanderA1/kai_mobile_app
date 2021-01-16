@@ -7,7 +7,6 @@ import 'package:kai_mobile_app/model/activitys_response.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:kai_mobile_app/screens/detail/detail_activity_screen.dart';
 
-
 class ActivityScreen extends StatefulWidget {
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
@@ -28,7 +27,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-           
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -36,10 +34,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
         ),
         title: Text(
           "Активности",
-          
         ),
         centerTitle: true,
-      
       ),
       body: _buildNewsView(),
     );
@@ -128,8 +124,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 24.0, right: 8, left: 8),
+                padding: const EdgeInsets.only(bottom: 24.0, right: 8, left: 8),
                 child: Text(
                   activityModel.desc,
                   overflow: TextOverflow.ellipsis,

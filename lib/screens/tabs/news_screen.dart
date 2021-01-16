@@ -30,10 +30,8 @@ class _NewsScreenState extends State<NewsScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-
           title: Text(
             "Новости",
-            
           ),
           centerTitle: true,
         ),
@@ -93,7 +91,6 @@ class _NewsScreenState extends State<NewsScreen> {
         child: Card(
           elevation: 1,
           child: Container(
-            
             child: Column(
               children: [
                 Container(
@@ -152,7 +149,6 @@ class _NewsScreenState extends State<NewsScreen> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
                       style: kHintTextStyle,
-                    
                     ),
                   ),
                 ),
@@ -163,6 +159,4 @@ class _NewsScreenState extends State<NewsScreen> {
       ),
     );
   }
-
-  
 }

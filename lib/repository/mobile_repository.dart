@@ -161,6 +161,7 @@ class MobileRepository {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString("authToken");
     var headers = {"Authorization": "Bearer $authToken"};
+    print("/n$authToken");
     if (authToken != null) {
       try {
         Response response = await _dio.get(mainUrl + activitiesUrl,
@@ -170,6 +171,7 @@ class MobileRepository {
         //var data = jsonDecode(response.data);
 
         var rest = response.data as List;
+        print(response);
         //print(response.data[0]['image']);
         if (rest.isNotEmpty) {
           return ActivitysResponse.fromJson(response.data);

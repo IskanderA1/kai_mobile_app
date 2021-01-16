@@ -8,7 +8,6 @@ import 'package:kai_mobile_app/model/lesson_brs_model.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/semester_brs_model.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
-import 'package:kai_mobile_app/model/user_response.dart';
 
 class BRSScreen extends StatefulWidget {
   @override

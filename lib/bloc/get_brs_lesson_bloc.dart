@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
-import 'package:kai_mobile_app/model/semester_response.dart';
 import 'package:kai_mobile_app/repository/kai_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
