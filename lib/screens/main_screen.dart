@@ -1,4 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
@@ -18,8 +19,25 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+    _firebaseMessaging.getToken().then((String token) {
+      print("token $token");
+      sendTokenToServer(token);
+    });
+
     try {
       IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
       socket.onConnect((_) {
@@ -120,4 +138,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+}
+
+Future<void> sendTokenToServer(String token) async {
+  var url = 'https://e0cf7973d18e.ngrok.io/api/device/new';
+  var uuid = UniqueKey().toString();
+  var response = await http
+      .post(url, body: {'uuid': uuid, 'token': token, 'platform': 'android'});
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
 }

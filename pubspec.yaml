@@ -30,6 +30,12 @@ dependencies:
   socket_io_client: ^0.9.12
   day_night_switcher: ^0.1.1+1
   flutter_markdown: ^0.5.2
+  firebase_core:
+  firebase_analytics:
+  firebase_auth:
+  cloud_firestore:
+  firebase_messaging: ^7.0.0
+  http: ^0.12.2
 
 
 dev_dependencies:
