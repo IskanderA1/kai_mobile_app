@@ -12,6 +12,7 @@ import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:http/http.dart' as http;
 
 class MainScreen extends StatefulWidget {
   @override
@@ -22,22 +23,6 @@ class _MainScreenState extends State<MainScreen> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
-    );
-    _firebaseMessaging.getToken().then((String token) {
-      print("token $token");
-      sendTokenToServer(token);
-    });
-
     try {
       IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
       socket.onConnect((_) {
@@ -45,6 +30,21 @@ class _MainScreenState extends State<MainScreen> {
         //socket.emit('add_like', '4542e123...312313');
       });
       socket.connect();
+      _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+        },
+        onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+        },
+      );
+      _firebaseMessaging.getToken().then((String token) {
+        print("token $token");
+        sendTokenToServer(token);
+      });
     } catch (e) {
       print(e.toString());
     }
