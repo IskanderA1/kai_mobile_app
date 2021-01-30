@@ -15,6 +15,7 @@ If you have any questions or suggestions about my Privacy Policy, do not hesitat
 Безопасность Вашей персональной информации не будет нарушена.
 Мы не просим информацию о местоположении через наше мобильное приложение.
 Мы не отправляем на электронную почту рассылку новостей.
+
 #Контакты
 e-mail: adiullov.iskander2000@gmail.com
 
