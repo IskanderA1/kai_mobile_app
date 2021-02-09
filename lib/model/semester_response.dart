@@ -32,5 +32,5 @@ class SemesterResponseWithError extends SemesterResponse {
 }
 
 class SemesterResponseLoading extends SemesterResponse {
-  SemesterResponseLoading(String str) : super.withError(str);
+  SemesterResponseLoading() : super.withError("");
 }

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
@@ -90,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               flex: 8,
               child: Padding(
                 padding: EdgeInsets.only(top: 40, right: 30, left: 30),
-                child: Column(
+                child: ListView(
                   children: [
                     _buildUserDataText(
                         label: "Институт:",
@@ -128,6 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     onTap: () {
+                      themeBloc.pickItem(true);
                       authBloc
                         ..authLogOut(
                             getSemestrBloc.subject.value.semesters.length !=
@@ -146,8 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           alignment: Alignment.center,
           child: Container(
             margin: EdgeInsets.only(left: 30, right: 30),
-            height: 100,
-            width: 370,
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.80,
             child: _buildNameCard(snapshot.data),
           ),
         ),
@@ -188,18 +190,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Padding(
         padding: EdgeInsets.only(top: 20, right: 20, left: 20),
         child: Column(children: [
-          Text(
-            userResponse.user.studFio,
-            style: Theme.of(context).textTheme.headline1,
-            textAlign: TextAlign.center,
+          Flexible(
+            child: AutoSizeText(
+              userResponse.user.studFio,
+              style: Theme.of(context).textTheme.headline1,
+              textAlign: TextAlign.center,
+              minFontSize: 10,
+            ),
           ),
           SizedBox(
             height: 8,
           ),
-          Text(
-            "Номер зачетки: ${userResponse.user.zach}",
-            style: Theme.of(context).textTheme.subtitle1,
-            textAlign: TextAlign.center,
+          Flexible(
+            child: AutoSizeText(
+              "Номер зачетки: ${userResponse.user.zach}",
+              style: Theme.of(context).textTheme.subtitle1,
+              textAlign: TextAlign.center,
+              minFontSize: 6,
+            ),
           ),
         ]),
       ),

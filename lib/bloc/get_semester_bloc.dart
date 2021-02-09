@@ -5,11 +5,15 @@ import 'package:rxdart/rxdart.dart';
 class GetSemestrBloc {
   final KaiRepository _repository = KaiRepository();
   final BehaviorSubject<SemesterResponse> _subject =
-  BehaviorSubject<SemesterResponse>();
+      BehaviorSubject<SemesterResponse>();
 
-  getSemestr() async {
+  SemesterResponse get defaultItem => SemesterResponseLoading();
+
+  ///Получаем количество семестров
+  Future<SemesterResponse> getSemestr() async {
     SemesterResponse response = await _repository.getSemestr();
     _subject.sink.add(response);
+    return response;
   }
 
   dispose() {
@@ -17,6 +21,6 @@ class GetSemestrBloc {
   }
 
   BehaviorSubject<SemesterResponse> get subject => _subject;
-
 }
+
 final getSemestrBloc = GetSemestrBloc();

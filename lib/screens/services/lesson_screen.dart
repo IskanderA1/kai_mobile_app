@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_lessons_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/lesson_model.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
-
 
 class LessonsScreen extends StatefulWidget {
   @override
@@ -39,7 +39,6 @@ class _LessonsScreenState extends State<LessonsScreen> {
             child: PreferredSize(
               preferredSize: null,
               child: TabBar(
-                
                 tabs: [
                   Tab(
                     text: "ПН",
@@ -65,7 +64,6 @@ class _LessonsScreenState extends State<LessonsScreen> {
           ),
           Expanded(
             child: TabBarView(
-              
               children: [
                 _buildLessonsView(1),
                 _buildLessonsView(2),
@@ -139,16 +137,14 @@ class _LessonsScreenState extends State<LessonsScreen> {
                     weekBloc.pickWeek(0);
                   },
                   child: Container(
-                    
                     child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Четная",
-                       style: snapshot.data == WeekItem.EVEN
-                            ? Theme.of(context).textTheme.headline3
-                            : Theme.of(context).textTheme.headline4,
-                            )
-                    ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Четная",
+                          style: snapshot.data == WeekItem.EVEN
+                              ? Theme.of(context).textTheme.headline3
+                              : Theme.of(context).textTheme.headline4,
+                        )),
                   ),
                 )),
                 SizedBox(
@@ -164,7 +160,6 @@ class _LessonsScreenState extends State<LessonsScreen> {
                     weekBloc.pickWeek(1);
                   },
                   child: Container(
-          
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
@@ -172,7 +167,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
                         style: snapshot.data == WeekItem.UNEVEN
                             ? Theme.of(context).textTheme.headline3
                             : Theme.of(context).textTheme.headline4,
-                            ),
+                      ),
                     ),
                   ),
                 )),
@@ -187,10 +182,9 @@ class _LessonsScreenState extends State<LessonsScreen> {
       padding: const EdgeInsets.only(
         top: 8,
       ),
-      child: Card(
-              child: Container(
-          height: 110,
-          
+      child: Container(
+        height: 110,
+        child: Card(
           child: Row(
             children: [
               Expanded(
@@ -242,51 +236,71 @@ class _LessonsScreenState extends State<LessonsScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          lesson.disciplineName,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).accentColor,
+                        Flexible(
+                          flex: 2,
+                          child: AutoSizeText(
+                            "${lesson.disciplineName}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            minFontSize: 8,
+                            maxFontSize: 16,
                           ),
                         ),
                         SizedBox(
                           height: 4,
                         ),
-                        Text(
-                          "${lesson.disciplineType}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                        Flexible(
+                          flex: 1,
+                          child: AutoSizeText(
+                            "${lesson.disciplineType}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            minFontSize: 6,
+                            maxFontSize: 14,
                           ),
                         ),
                         SizedBox(
                           height: 4,
                         ),
-                        Text(
-                          "${lesson.prepodName}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                        Flexible(
+                          flex: 1,
+                          child: AutoSizeText(
+                            "${lesson.prepodName}",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                            minFontSize: 6,
+                            maxFontSize: 14,
                           ),
                         ),
                         SizedBox(
                           height: 4,
                         ),
-                        lesson.dayDate != null
-                            ? Text(
-                                "${lesson.dayDate}",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              )
-                            : SizedBox(),
+                        Flexible(
+                          flex: 1,
+                          child: lesson.dayDate != null
+                              ? AutoSizeText(
+                                  "${lesson.dayDate}",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  minFontSize: 6,
+                                  maxFontSize: 14,
+                                )
+                              : SizedBox(),
+                        ),
                       ],
                     ),
                   ),

@@ -11,7 +11,6 @@ import 'package:kai_mobile_app/screens/services/map_screen.dart';
 import 'package:kai_mobile_app/screens/services/my_group_screen.dart';
 import 'package:kai_mobile_app/screens/services/service_menu_screen.dart';
 
-
 class ServiceScreen extends StatefulWidget {
   @override
   _ServiceScreenState createState() => _ServiceScreenState();
@@ -23,36 +22,36 @@ class _ServiceScreenState extends State<ServiceScreen> {
     return WillPopScope(
       onWillPop: () async {
         print("onWillPop");
+        //Navigator.pop(context);
         serviceMenu..backToMenu();
         return false;
-        },
+      },
       child: StreamBuilder(
-        stream: serviceMenu.itemStream,
-        initialData: serviceMenu.defaultItem,
-        // ignore: missing_return
-        builder: (context, AsyncSnapshot<ServiceMenuItem> snapshot) {
-          switch(snapshot.data){
-            case ServiceMenuItem.MENU:
-              return ServiceMenuScreen();
-            case ServiceMenuItem.LESSON:
-              return LessonsScreen();
-            case ServiceMenuItem.EXAMS:
-              return ExamsScreen();
-            case ServiceMenuItem.MY_GROUP:
-              return MyGroupScreen();
-            case ServiceMenuItem.BRS:
-              return BRSScreen();
-            case ServiceMenuItem.MAP:
-              return MapScreen();
-            case ServiceMenuItem.ACTIVITY:
-              return ActivityScreen();
-            case ServiceMenuItem.DOC:
-              return DocScreen();
-            case ServiceMenuItem.CONTROL:
-              return ControlScreen();
-          }
-        }
-      ),
+          stream: serviceMenu.itemStream,
+          initialData: serviceMenu.defaultItem,
+          // ignore: missing_return
+          builder: (context, AsyncSnapshot<ServiceMenuItem> snapshot) {
+            switch (snapshot.data) {
+              case ServiceMenuItem.MENU:
+                return ServiceMenuScreen();
+              case ServiceMenuItem.LESSON:
+                return LessonsScreen();
+              case ServiceMenuItem.EXAMS:
+                return ExamsScreen();
+              case ServiceMenuItem.MY_GROUP:
+                return MyGroupScreen();
+              case ServiceMenuItem.BRS:
+                return BRSScreen();
+              case ServiceMenuItem.MAP:
+                return MapScreen();
+              case ServiceMenuItem.ACTIVITY:
+                return ActivityScreen();
+              case ServiceMenuItem.DOC:
+                return DocScreen();
+              case ServiceMenuItem.CONTROL:
+                return ControlScreen();
+            }
+          }),
     );
   }
 }

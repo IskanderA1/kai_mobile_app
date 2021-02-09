@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:intl/intl.dart';
 import 'package:kai_mobile_app/model/activity_model.dart';
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
+import 'package:kai_mobile_app/style/constant.dart';
 
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'dart:math' as math;
@@ -26,6 +28,8 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /* DateTime dateTime =
+        DateFormat("yyyy-MM-ddTHH:mm:ss").parse(_activityModel.date);*/
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(slivers: [
@@ -57,7 +61,29 @@ class _DetailActivityScreenState extends State<DetailActivityScreen> {
                     padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(_activityModel.desc),
+                        Container(
+                            padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              _activityModel.title,
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: Style.Colors.standardTextColor,
+                                    offset: Offset(1, 1.0),
+                                  ),
+                                ],
+                                color:
+                                    Theme.of(context).textTheme.headline6.color,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 20,
+                                fontFamily: 'OpenSans',
+                              ),
+                            )),
+                        Text(
+                          _activityModel.desc,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Row(
@@ -177,77 +203,22 @@ class _SliverAppBar extends StatelessWidget {
         const fadeEnd = 1.0;
         final opacity = 1.0 - Interval(fadeStart, fadeEnd).transform(t);
         print(c.biggest.height);
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            Opacity(
-              opacity: opacity,
-              child: Hero(
-                transitionOnUserGestures: true,
-                tag: activityModel,
-                child: Transform.scale(
-                  scale: 1.0,
-                  child: activityModel.image != null
-                      ? Image.network(
-                          MobileRepository.mainUrl + activityModel.image,
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width,
-                        )
-                      : Container(color: Colors.red),
-                ),
-              ),
+        return Opacity(
+          opacity: opacity,
+          child: Hero(
+            transitionOnUserGestures: true,
+            tag: activityModel,
+            child: Transform.scale(
+              scale: 1.0,
+              child: activityModel.image != null
+                  ? Image.network(
+                      MobileRepository.mainUrl + activityModel.image,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                    )
+                  : Container(color: Colors.red),
             ),
-            Opacity(
-              opacity: Interval(fadeStart, fadeEnd).transform(t),
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 84,
-                  child: Text(
-                    activityModel.title,
-                    maxLines: (4 - 240 ~/ c.biggest.height) > 0
-                        ? (4 - 240 ~/ c.biggest.height)
-                        : 1,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ),
-              ),
-            ),
-            Opacity(
-              opacity: opacity,
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 84,
-                  child: Hero(
-                    flightShuttleBuilder: _flightShuttleBuilder,
-                    tag: activityModel.id,
-                    child: Text(
-                      activityModel.title,
-                      maxLines: (4 - 240 ~/ c.biggest.height) > 0
-                          ? (4 - 240 ~/ c.biggest.height)
-                          : 1,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Style.Colors.standardTextColor,
-                            offset: Offset(1, 1.0),
-                          ),
-                        ],
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 18,
-                        fontFamily: 'OpenSans',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         );
       },
     );

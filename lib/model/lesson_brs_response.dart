@@ -1,43 +1,43 @@
 import 'lesson_brs_model.dart';
 
-class LessonsBRSResponse {
+class OneLessonBRSResponse {
   final List<LessonBRSModel> lessonsBRS;
   final String error;
 
-  LessonsBRSResponse(this.lessonsBRS, this.error);
+  OneLessonBRSResponse(this.lessonsBRS, this.error);
 
-  LessonsBRSResponse.fromJson(Map<String, dynamic> json)
+  OneLessonBRSResponse.fromJson(Map<String, dynamic> json)
       : lessonsBRS = (json["Data"] as List)
             .map((i) => new LessonBRSModel.fromJson(i))
             .toList(),
         error = "";
 
-  LessonsBRSResponse.withError(String errorValue)
+  OneLessonBRSResponse.withError(String errorValue)
       : lessonsBRS = List(),
         error = errorValue;
 }
 
-class LessonsBRSResponseLoading extends LessonsBRSResponse {
-  LessonsBRSResponseLoading() : super.withError("Загрузка");
+class OneLessonBRSResponseLoading extends OneLessonBRSResponse {
+  OneLessonBRSResponseLoading() : super.withError("Загрузка");
 }
 
-class LessonsBRSResponseOk extends LessonsBRSResponse {
-  LessonsBRSResponseOk(Map<String, dynamic> json) : super.fromJson(json);
+class OneLessonBRSResponseOk extends OneLessonBRSResponse {
+  OneLessonBRSResponseOk(Map<String, dynamic> json) : super.fromJson(json);
 }
 
-class LessonsBRSResponseWithErrors extends LessonsBRSResponse {
-  LessonsBRSResponseWithErrors(String err) : super.withError(err);
+class OneLessonBRSResponseWithErrors extends OneLessonBRSResponse {
+  OneLessonBRSResponseWithErrors(String err) : super.withError(err);
 }
 
 //////////////////////////
 class LessonsBRSResponsesList {
-  List<LessonsBRSResponse> lessonsBRSResponsesList;
+  List<OneLessonBRSResponse> lessonsBRSResponsesList;
   String error;
   LessonsBRSResponsesList(this.lessonsBRSResponsesList) : error = "";
 
   add(Map<String, dynamic> json) {
     lessonsBRSResponsesList.addAll((json["Data"] as List)
-        .map((i) => new LessonsBRSResponse.fromJson(i))
+        .map((i) => new OneLessonBRSResponse.fromJson(i))
         .toList());
     error = "";
   }
@@ -51,8 +51,9 @@ class LessonsBRSResponsesList {
 }
 
 class LessonsBRSResponsesListOK extends LessonsBRSResponsesList {
-  LessonsBRSResponsesListOK(List<LessonsBRSResponse> lessonsBRSResponsesList)
-      : super(lessonsBRSResponsesList);
+  LessonsBRSResponsesListOK(
+      /*List<OneLessonBRSResponse> lessonsBRSResponsesList*/)
+      : super.withError("");
 }
 
 class LessonsBRSResponsesListLoading extends LessonsBRSResponsesList {

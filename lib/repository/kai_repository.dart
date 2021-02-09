@@ -170,20 +170,20 @@ class KaiRepository {
         if (rest.isNotEmpty) {
           print("${data["Data"][0]} test");
           prefs.setString("examssData", jsonEncode(data));
-          return ExamsResponse.fromJson(data);
+          return ExamsResponseOk(data);
         } else {
-          return ExamsResponse.withError("Авторизуйтесь");
+          return ExamsResponseEmpty();
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (lessonsSP != null) {
-          return ExamsResponse.fromJson(lessonsSP);
+          return ExamsResponseOk(lessonsSP);
         }
-        return ExamsResponse.withError("Авторизуйтесь");
+        return ExamsResponseUserUnAuth("Авторизуйтесь");
       }
     } else {
       print("Требуется авторизация");
-      return ExamsResponse.withError("Авторизуйтесь");
+      return ExamsResponseUserUnAuth("Авторизуйтесь");
     }
   }
 
@@ -211,7 +211,7 @@ class KaiRepository {
         var data = jsonDecode(response.data);
         var rest = data["Data"] as List;
         if (rest.isNotEmpty) {
-          print("${data["Data"][0]} test");
+          print("${data["Data"][0]} Кол-во семестров");
           prefs.setString("semestr", jsonEncode(data["Data"][0]));
           return SemesterResponseUserLoggedIn(data["Data"][0]);
         } else {
@@ -230,7 +230,7 @@ class KaiRepository {
     }
   }
 
-  Future<LessonsBRSResponse> getLessonsBRS(int semesterNum) async {
+  Future<OneLessonBRSResponse> getOneSemesterLessonsBRS(int semesterNum) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var dataSP = prefs.getString("userData") != null
         ? jsonDecode(prefs.getString("userData"))
@@ -256,20 +256,20 @@ class KaiRepository {
         if (rest.isNotEmpty) {
           print("BRS: ${data["Data"][0]}");
           prefs.setString("brs$semesterNum", jsonEncode(data));
-          return LessonsBRSResponseOk(data);
+          return OneLessonBRSResponseOk(data);
         } else {
-          return LessonsBRSResponseWithErrors("Авторизуйтесь");
+          return OneLessonBRSResponseWithErrors("Авторизуйтесь");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (lessonsBRSSP != null) {
-          return LessonsBRSResponseOk(lessonsBRSSP);
+          return OneLessonBRSResponseOk(lessonsBRSSP);
         }
-        return LessonsBRSResponseWithErrors("Авторизуйтесь");
+        return OneLessonBRSResponseWithErrors("Авторизуйтесь");
       }
     } else {
       print("Требуется авторизация");
-      return LessonsBRSResponseWithErrors("Авторизуйтесь");
+      return OneLessonBRSResponseWithErrors("Авторизуйтесь");
     }
   }
 

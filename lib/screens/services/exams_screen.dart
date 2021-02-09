@@ -8,9 +8,6 @@ import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/model/exam_model.dart';
 import 'package:kai_mobile_app/model/exams_response.dart';
 
-
-
-
 class ExamsScreen extends StatefulWidget {
   @override
   _ExamsScreenState createState() => _ExamsScreenState();
@@ -37,7 +34,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            
           ),
           onPressed: () {
             serviceMenu..backToMenu();
@@ -47,8 +43,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
           "Экзамены",
         ),
         centerTitle: true,
-
-      
       ),
       body: _buildExamsView(),
     );
@@ -59,15 +53,20 @@ class _ExamsScreenState extends State<ExamsScreen> {
         stream: getExamsBloc.subject.stream,
         builder: (context, AsyncSnapshot<ExamsResponse> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              if (snapshot.data.error == "Авторизуйтесь") {
-                return buildAuthButton();
-              }
+            if (snapshot.data is ExamsResponseUserUnAuth) {
+              return buildAuthButton();
+            } else if (snapshot.data is ExamsResponseEmpty) {
+              return Center(
+                child: Text("Список экзаменов пуст"),
+              );
+            } else if (snapshot.data is ExamsResponseOk) {
+              return _buildLessonsList(snapshot.data);
+            } else if (snapshot.data is ExamsResponseWithError) {
               return Center(
                 child: Text(snapshot.data.error),
               );
             }
-            return _buildLessonsList(snapshot.data);
+            return buildLoadingWidget();
           } else if (snapshot.hasError) {
             return Container();
           } else {
@@ -79,15 +78,11 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Widget _buildLessonsList(ExamsResponse lessonsResponse) {
     List<ExamModel> lessons = lessonsResponse.exams;
     return ListView.builder(
-              itemCount: lessons.length,
-              itemBuilder: (context, index) {
-                return _buildLessonItem(lessons[index])
-                    ;
-              });
-
+        itemCount: lessons.length,
+        itemBuilder: (context, index) {
+          return _buildLessonItem(lessons[index]);
+        });
   }
-
- 
 
   Widget _buildLessonItem(ExamModel examModel) {
     return Padding(
@@ -95,7 +90,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         top: 8,
       ),
       child: Card(
-              child: Container(
+        child: Container(
           height: 110,
           child: Row(
             children: [
@@ -114,7 +109,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           style: TextStyle(
                             fontSize: 30,
                             color: Theme.of(context).accentColor,
-                            
                           ),
                         ),
                         Text(
@@ -122,7 +116,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
-                           
                           ),
                         ),
                         Text(
@@ -130,7 +123,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
-                           
                           ),
                         ),
                       ],
@@ -160,7 +152,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                             color: Theme.of(context).accentColor,
                           ),
                         ),
-                    
                         SizedBox(
                           height: 4,
                         ),
@@ -170,22 +161,20 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
-                           
                           ),
                         ),
                         SizedBox(
                           height: 4,
                         ),
-                       Text(
-                                "${examModel.examDate}",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              )
-                            ,
+                        Text(
+                          "${examModel.examDate}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Theme.of(context).accentColor,
+                          ),
+                        ),
                       ],
                     ),
                   ),

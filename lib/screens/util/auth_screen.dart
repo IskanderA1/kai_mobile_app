@@ -90,6 +90,7 @@ class _AuthScreenState extends State<AuthScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+            textCapitalization: TextCapitalization.words,
             controller: loginController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(

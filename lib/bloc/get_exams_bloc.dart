@@ -5,10 +5,11 @@ import 'package:rxdart/rxdart.dart';
 class GetExamsBloc {
   final KaiRepository _repository = KaiRepository();
   final BehaviorSubject<ExamsResponse> _subject =
-  BehaviorSubject<ExamsResponse>();
+      BehaviorSubject<ExamsResponse>();
 
   getExams() async {
-    ExamsResponse response = await _repository.getExams();
+    _subject.sink.add(ExamsResponseLoading());
+    var response = await _repository.getExams();
     _subject.sink.add(response);
   }
 
@@ -17,6 +18,6 @@ class GetExamsBloc {
   }
 
   BehaviorSubject<ExamsResponse> get subject => _subject;
-
 }
+
 final getExamsBloc = GetExamsBloc();
