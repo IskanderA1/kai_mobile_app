@@ -17,12 +17,14 @@ class MyApp extends StatelessWidget {
       builder: (context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.data) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'KaiMobile',
             theme: themeLight,
             home: MainScreen(),
           );
         } else {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'KaiMobile',
             theme: themeDark,
             home: MainScreen(),
