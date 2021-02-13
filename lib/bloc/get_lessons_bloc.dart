@@ -8,6 +8,7 @@ class GetLessonsBloc {
   BehaviorSubject<LessonsResponse>();
 
   getLessons() async {
+    _subject.sink.add(LessonsResponse.withError("Loading"));
     LessonsResponse response = await _repository.getLessons();
     _subject.sink.add(response);
   }

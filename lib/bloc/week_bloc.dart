@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:kai_mobile_app/repository/mobile_repository.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:week_of_year/week_of_year.dart';
+
 
 enum WeekItem { EVEN, UNEVEN }
 
@@ -25,13 +27,9 @@ class WeekBloc {
   }
 
   getCurrWeek() async {
-    int response = await _repository.getCurrWeek();
-    if (response == 1) {
-      this.currWeek = WeekItem.UNEVEN;
-      _weekController.sink.add(WeekItem.UNEVEN);
-    } else {
-      _weekController.sink.add(WeekItem.EVEN);
-    }
+    final DateTime date = DateTime.now();
+    print("DataTime = ${date.weekOfYear%2==0?"UNEVEN":"EVEN"}");
+    date.weekOfYear%2==0? _weekController.sink.add(WeekItem.UNEVEN):_weekController.sink.add(WeekItem.EVEN);
   }
 
   close() {

@@ -16,3 +16,7 @@ class LessonsResponse {
       : lessons = List(),
         error = errorValue;
 }
+
+class LessonsResponseLoading extends LessonsResponse {
+  LessonsResponseLoading() : super.withError("");
+}

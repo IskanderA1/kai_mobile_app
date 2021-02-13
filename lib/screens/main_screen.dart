@@ -1,5 +1,4 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
@@ -8,11 +7,10 @@ import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/bloc/theme_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
+import 'package:kai_mobile_app/repository/widget_repository.dart';
 import 'package:kai_mobile_app/screens/tabs/news_screen.dart';
 import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:http/http.dart' as http;
 
 class MainScreen extends StatefulWidget {
   @override
@@ -20,38 +18,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
-    try {
-      IO.Socket socket = IO.io("http://kaimobile.loliallen.com");
-      socket.onConnect((_) {
-        print('CONNECT');
-        //socket.emit('add_like', '4542e123...312313');
-      });
-      socket.connect();
-      _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-        },
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-        },
-      );
-      _firebaseMessaging.getToken().then((String token) {
-        print("token $token");
-        sendTokenToServer(token);
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+    WidgetRepository().getFCMtoken();
     themeBloc.getUserTheme();
     authBloc..authWithLocal();
     dayWeekBloc..getDay();
     getSemestrBloc..getSemestr();
+    weekBloc..getCurrWeek();
     super.initState();
   }
 
@@ -138,13 +112,4 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-}
-
-Future<void> sendTokenToServer(String token) async {
-  var url = 'https://e0cf7973d18e.ngrok.io/api/device/new';
-  var uuid = UniqueKey().toString();
-  var response = await http
-      .post(url, body: {'uuid': uuid, 'token': token, 'platform': 'android'});
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
 }

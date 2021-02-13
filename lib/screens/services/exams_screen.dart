@@ -17,7 +17,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
   @override
   void initState() {
     getExamsBloc..getExams();
-    weekBloc..getCurrWeek();
     super.initState();
   }
 

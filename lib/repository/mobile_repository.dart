@@ -38,13 +38,14 @@ class MobileRepository {
         prefs.setString("password", password);
         prefs.setString("authToken", data["user"]["token"]["value"]);
         prefs.setString("userData", jsonEncode(data["user"]));
-        //print(response.data);
+        print(response.data);
         return UserResponseLoggedIn(data["user"]);
       } else {
         print("Неверный логин или пароль");
         return UserResponseLoggetOut("Неверный логин или пароль");
       }
     } catch (error, stacktrace) {
+      
       print("Exception occured: $error stackTrace: $stacktrace");
       return UserResponseLoggetOut("Неверный логин или пароль");
     }

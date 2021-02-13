@@ -87,6 +87,8 @@ class _LessonsScreenState extends State<LessonsScreen> {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
               if (snapshot.data.error == "Авторизуйтесь") {
                 return buildAuthButton();
+              } else if(snapshot.data.error == "Loading"){
+                return buildLoadingWidget();
               }
               return Center(
                 child: Text(snapshot.data.error),
@@ -94,6 +96,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
             }
             return _buildLessonsList(snapshot.data, day);
           } else if (snapshot.hasError) {
+            print("snapshot.hasError");
             return Container();
           } else {
             return buildLoadingWidget();
@@ -197,25 +200,39 @@ class _LessonsScreenState extends State<LessonsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          lesson.dayTime,
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Theme.of(context).accentColor,
+                        Flexible(
+                          flex: 2,
+                          child: AutoSizeText(
+                            lesson.dayTime,
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            minFontSize: 20,
                           ),
                         ),
-                        Text(
-                          "Здание: ${lesson.buildNum}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
+
+                        Flexible(
+                          flex: 1,
+                          child: AutoSizeText(
+                            "Здание: ${lesson.buildNum}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                            minFontSize: 10,
                           ),
+                        
                         ),
-                        Text(
-                          "Ауд: ${lesson.audNum}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
+                        Flexible(
+                          flex: 1,
+                                                  child: AutoSizeText(
+                            "Ауд: ${lesson.audNum}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                            minFontSize: 10,
                           ),
                         ),
                       ],
