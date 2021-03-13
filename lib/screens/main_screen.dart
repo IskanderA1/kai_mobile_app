@@ -5,6 +5,7 @@ import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
 import 'package:kai_mobile_app/bloc/bottom_navbar_bloc.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
+import 'package:kai_mobile_app/bloc/porfolio_menu_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/bloc/theme_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
@@ -13,6 +14,8 @@ import 'package:kai_mobile_app/screens/tabs/srevice_screen.dart';
 import 'package:kai_mobile_app/screens/util/auth_check_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
+
+import 'tabs/portfolio_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -64,6 +67,7 @@ class _MainScreenState extends State<MainScreen> {
     bottomNavBarBloc.close();
     getSemestrBloc.dispose();
     weekBloc.close();
+    portfolioBloc.close();
     super.dispose();
   }
 
@@ -81,8 +85,8 @@ class _MainScreenState extends State<MainScreen> {
                 return NewsScreen();
               case NavBarItem.SERVICE:
                 return ServiceScreen();
-              // case NavBarItem.MESSENGER:
-              //   return MessengerScreen();
+              case NavBarItem.PORTFOLIO:
+                return PortfolioScreen();
               case NavBarItem.PROFILE:
                 return AuthCheckScreen();
             }
@@ -96,9 +100,7 @@ class _MainScreenState extends State<MainScreen> {
           return Container(
             child: ClipRRect(
               child: BottomNavigationBar(
-                //backgroundColor: Style.Colors.mainColor,
                 iconSize: 20,
-                //unselectedItemColor: Style.Colors.grey,
                 unselectedFontSize: 9.5,
                 selectedFontSize: 9.5,
                 type: BottomNavigationBarType.shifting,
@@ -122,14 +124,19 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   BottomNavigationBarItem(
                     label: "",
+                    icon: Icon(Icons.assignment_outlined),
+                    activeIcon: Icon(Icons.assessment),
+                  ),
+                  BottomNavigationBarItem(
+                    label: "",
                     icon: Icon(EvaIcons.personOutline),
                     activeIcon: Icon(EvaIcons.person),
                   ),
-                  // BottomNavigationBarItem(
-                  //   label: "",
-                  //   icon: Icon(EvaIcons.messageSquareOutline),
-                  //   activeIcon: Icon(EvaIcons.messageSquare),
-                  // ),
+                  /*BottomNavigationBarItem(
+                    label: "",
+                    icon: Icon(EvaIcons.messageSquareOutline),
+                    activeIcon: Icon(EvaIcons.messageSquare),
+                  ),*/
                 ],
               ),
             ),
