@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kai_mobile_app/bloc/porfolio_menu_bloc.dart';
 import 'package:kai_mobile_app/screens/portfolio/portfolio_achiev_adding_screen.dart';
 import 'package:kai_mobile_app/screens/portfolio/portfolio_activity_adding_screen.dart';
@@ -76,23 +77,41 @@ class PortfolioPreviewScreen extends StatelessWidget {
             },
             child: Scaffold(
               body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Stack(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text("Превью портфолио"),
                       Container(
-                        height: 50,
-                        width: 250,
-                        child: FloatingActionButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          onPressed: () {
-                            portfolioBloc.pickItem(PortfMenuItems.Menu);
-                          },
-                          child: Text(
-                            "Присоединиться",
-                            style: TextStyle(fontSize: 22),
+                        height: double.infinity,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [Colors.grey, Colors.blue])),
+                      ),
+                      SvgPicture.asset(
+                        'assets/ArtProfile.svg',
+                        color: Colors.white,
+                      ),
+                      Positioned(
+                        bottom: 40,
+                        left: 30,
+                        right: 30,
+                        child: Container(
+                          height: 50,
+                          width: 250,
+                          child: FloatingActionButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onPressed: () {
+                              portfolioBloc.pickItem(PortfMenuItems.Menu);
+                            },
+                            child: Text(
+                              "Присоединиться",
+                              style: TextStyle(fontSize: 22),
+                            ),
                           ),
                         ),
                       ),
