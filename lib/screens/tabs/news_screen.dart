@@ -60,7 +60,7 @@ class _NewsScreenState extends State<NewsScreen> {
           } else if (snapshot.hasError) {
             return Container();
           } else {
-            return buildLoadingWidget();
+            return LoadingWidget();
           }
         });
   }

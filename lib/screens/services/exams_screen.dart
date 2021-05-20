@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_exams_bloc.dart';
 
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/bloc/week/week_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
 import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
@@ -14,11 +16,12 @@ class ExamsScreen extends StatefulWidget {
 }
 
 class _ExamsScreenState extends State<ExamsScreen> {
+  WeekBloc weekBloc;
   @override
   void initState() {
-    getExamsBloc..getExams();
-    weekBloc..getCurrWeek();
     super.initState();
+    getExamsBloc..getExams();
+    weekBloc = BlocProvider.of<WeekBloc>(context);
   }
 
   @override
@@ -54,7 +57,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         builder: (context, AsyncSnapshot<ExamsResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data is ExamsResponseUserUnAuth) {
-              return buildAuthButton();
+              return AuthButton();
             } else if (snapshot.data is ExamsResponseEmpty) {
               return Center(
                 child: Text("Список экзаменов пуст"),
@@ -66,11 +69,11 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 child: Text(snapshot.data.error),
               );
             }
-            return buildLoadingWidget();
+            return LoadingWidget();
           } else if (snapshot.hasError) {
             return Container();
           } else {
-            return buildLoadingWidget();
+            return LoadingWidget();
           }
         });
   }

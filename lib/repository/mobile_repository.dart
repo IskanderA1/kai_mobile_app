@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:kai_mobile_app/model/activitys_response.dart';
 import 'package:kai_mobile_app/model/news_response.dart';
 import 'package:kai_mobile_app/model/report_response.dart';
@@ -36,6 +37,7 @@ class MobileRepository {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         prefs.setString("login", login);
         prefs.setString("password", password);
+        print("Auth token" + data["user"]["token"]["value"]);
         prefs.setString("authToken", data["user"]["token"]["value"]);
         prefs.setString("userData", jsonEncode(data["user"]));
         //print(response.data);
@@ -226,7 +228,37 @@ class MobileRepository {
     }
   }
 
+  static Future<void> sendDevice(String token) async {
+    var url = 'api/device/new';
+    var uuid = UniqueKey().toString();
+    var platform;
+    if (Platform.isAndroid) {
+      platform = 'android';
+    } else if (Platform.isIOS) {
+      platform = 'ios';
+    } else {
+      platform = 'android';
+    }
+    var response = await http.post(mainUrl + url,
+        body: {'uuid': uuid, 'token': token, 'platform': platform});
+    if (response.statusCode == 200) {
+      print("Токен отправлен");
+    } else {
+      print("Токен не отправлен");
+    }
+  }
+
   Future<int> getCurrWeek() async {
+    /*DateTime since = DateTime(2021, 3, 8);
+    DateTime now = DateTime.now();
+    double dur = (now.difference(since).inDays / 7) % 2;
+
+    print(dur);
+    if(dur <= 1.0){
+      return 1;
+    }else{
+      return 0;
+    }*/
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString("authToken");
     int currWeek = prefs.getInt("currWeek");
@@ -243,8 +275,16 @@ class MobileRepository {
       } catch (error) {
         if (currWeek != null) {
           return currWeek;
+        } else {
+          DateTime since = DateTime(2021, 3, 8);
+          DateTime now = DateTime.now();
+          double dur = (now.difference(since).inDays / 7) % 2;
+          if (dur <= 1.0) {
+            return 1;
+          } else {
+            return 0;
+          }
         }
-        return 0;
       }
     } else {
       return 0;

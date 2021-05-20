@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 
 import 'package:kai_mobile_app/widgets/weather_widget.dart';
+import 'package:kai_mobile_app/widgets/week_widget.dart';
 
 class ServiceMenuScreen extends StatefulWidget {
   @override
@@ -41,7 +42,8 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
             ),
             Container(
               child: Column(children: [
-                buildWeatherWidget(context),
+                WeatherWidget(),
+                WeekWidget()
               ]),
             ),
           ],
@@ -105,7 +107,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         finishColor = Color(0xFF1F4C6A);
         break;
     }
-    return FlatButton(
+    return InkWell(
       child: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +136,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
           ],
         ),
       ),
-      onPressed: () {
+      onTap: () {
         serviceMenu.pickItem(index);
       },
     );

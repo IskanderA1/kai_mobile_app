@@ -13,7 +13,7 @@ class GetBRSLessonBloc {
   List<GetBRSOneLessonBloc> get semesters => semestersBlocs;
 
   Future getBrsLessons(int semesterCount) async {
-    semestersBlocs = List<GetBRSOneLessonBloc>();
+    semestersBlocs = List<GetBRSOneLessonBloc>.empty(growable: true);
     _subject.sink.add(LessonsBRSResponsesListLoading());
     for (int i = 1, k = 0; i <= semesterCount || k < semesterCount; i++, k++) {
       semestersBlocs.add(GetBRSOneLessonBloc(semesterNumber: i));

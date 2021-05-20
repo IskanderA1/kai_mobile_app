@@ -309,7 +309,7 @@ class _ControlScreenState extends State<ControlScreen> {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {
               if (snapshot.data.error == "Авторизуйтесь") {
-                return buildAuthButton();
+                return AuthButton();
               }
               return Center(
                 child: Text(snapshot.data.error),
@@ -319,7 +319,7 @@ class _ControlScreenState extends State<ControlScreen> {
           } else if (snapshot.hasError) {
             return Container();
           } else {
-            return buildLoadingWidget();
+            return LoadingWidget();
           }
         });
   }
@@ -480,7 +480,7 @@ class _ControlScreenState extends State<ControlScreen> {
                 color: Colors.white,
                 height: MediaQuery.of(context).size.height * 0.95,
                 child: Center(
-                  child: buildLoadingWidget(),
+                  child: LoadingWidget(),
                 ),
               )
             : Center(),
@@ -493,7 +493,7 @@ class _ControlScreenState extends State<ControlScreen> {
                     color: Theme.of(context).scaffoldBackgroundColor,
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: buildLoadingWidget(),
+                    child: LoadingWidget(),
                   );
                 } else {
                   return Center();

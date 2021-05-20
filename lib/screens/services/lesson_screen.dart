@@ -1,12 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kai_mobile_app/bloc/day_bloc.dart';
+import 'package:kai_mobile_app/bloc/day_week/dayweek_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_lessons_bloc.dart';
+import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/bloc/week/week_bloc.dart';
 import 'package:kai_mobile_app/bloc/week_bloc.dart';
 import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
+import 'package:kai_mobile_app/elements/loader_horisont.dart';
 import 'package:kai_mobile_app/model/lesson_model.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
+
+import '../../model/week_item.dart';
 
 class LessonsScreen extends StatefulWidget {
   @override
@@ -14,11 +21,15 @@ class LessonsScreen extends StatefulWidget {
 }
 
 class _LessonsScreenState extends State<LessonsScreen> {
+  WeekBloc weekBloc;
+  DayWeekBloc dayWeekBloc;
+
   @override
   void initState() {
-    getLessonsBloc..getLessons();
-    weekBloc..getCurrWeek();
     super.initState();
+    weekBloc = context.read<WeekBloc>();
+    getLessonsBloc..getLessons();
+    dayWeekBloc = BlocProvider.of<DayWeekBloc>(context);
   }
 
   @override
@@ -30,7 +41,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
-      initialIndex: dayWeekBloc.currDay.index,
+      initialIndex: dayWeekBloc.current.index,
       child: Column(
         children: [
           _buildWeekCheck(),
@@ -82,98 +93,109 @@ class _LessonsScreenState extends State<LessonsScreen> {
   Widget _buildLessonsView(int day) {
     return StreamBuilder(
         stream: getLessonsBloc.subject.stream,
+        initialData: getLessonsBloc.defauiltItem,
         builder: (context, AsyncSnapshot<LessonsResponse> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              if (snapshot.data.error == "Авторизуйтесь") {
-                return buildAuthButton();
-              }
+            if (snapshot.data is LessonsResponseUnAuth) {
+              return AuthButton();
+            } else if (snapshot.data is LessonsResponseError) {
               return Center(
                 child: Text(snapshot.data.error),
               );
+            } else if (snapshot.data is LessonsResponseLoading) {
+              return LoadingWidget();
+            } else if (snapshot.data is LessonsResponseOk) {
+              return _buildLessonsList(snapshot.data, day);
+            } else {
+              return Container();
             }
-            return _buildLessonsList(snapshot.data, day);
           } else if (snapshot.hasError) {
             return Container();
           } else {
-            return buildLoadingWidget();
+            return LoadingWidget();
           }
         });
   }
 
   Widget _buildLessonsList(LessonsResponse lessonsResponse, int dayWeek) {
     List<LessonModel> lessons = lessonsResponse.lessons;
-    return StreamBuilder(
-        stream: weekBloc.weekStream,
-        initialData: weekBloc.currWeek,
-        builder: (context, AsyncSnapshot<WeekItem> snapshot) {
-          print("snap");
-          print(snapshot.data);
-          return ListView.builder(
-              itemCount: lessons.length,
-              itemBuilder: (context, index) {
-                return lessons[index].dayNum == dayWeek &&
-                        (lessons[index].dayEven == snapshot.data ||
-                            lessons[index].dayEven == null)
-                    ? _buildLessonItem(lessons[index])
-                    : Container();
-              });
+    return BlocBuilder(
+        cubit: weekBloc,
+        builder: (context, state) {
+          print("state");
+          if (state is WeekStateLoaded) {
+            return ListView.builder(
+                itemCount: lessons.length,
+                itemBuilder: (context, index) {
+                  return lessons[index].dayNum == dayWeek &&
+                          (lessons[index].dayEven == state.week ||
+                              lessons[index].dayEven == null)
+                      ? _buildLessonItem(lessons[index])
+                      : Container();
+                });
+          } else {
+            return LoadingWidget();
+          }
         });
   }
 
   Widget _buildWeekCheck() {
-    return StreamBuilder(
-        stream: weekBloc.weekStream,
-        initialData: weekBloc.currWeek,
-        builder: (context, AsyncSnapshot<WeekItem> snapshot) {
-          return Container(
-            color: Theme.of(context).primaryColor,
-            height: 60,
-            child: Row(
-              children: [
-                Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    weekBloc.pickWeek(0);
-                  },
-                  child: Container(
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Четная",
-                          style: snapshot.data == WeekItem.EVEN
-                              ? Theme.of(context).textTheme.headline3
-                              : Theme.of(context).textTheme.headline4,
-                        )),
-                  ),
-                )),
-                SizedBox(
-                  height: 25,
-                  width: 1,
-                  child: Container(
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-                Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    weekBloc.pickWeek(1);
-                  },
-                  child: Container(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Нечетная",
-                        style: snapshot.data == WeekItem.UNEVEN
-                            ? Theme.of(context).textTheme.headline3
-                            : Theme.of(context).textTheme.headline4,
-                      ),
+    return BlocBuilder<WeekBloc, WeekState>(
+        builder: (context, state) {
+          if (state is WeekStateLoaded) {
+            return Container(
+              color: Theme.of(context).primaryColor,
+              height: 60,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: GestureDetector(
+                    onTap: () {
+                      weekBloc.add(WeekEventPick(week: WeekItem.EVEN));
+                    },
+                    child: Container(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Четная",
+                            style: state.week == WeekItem.EVEN
+                                ? Theme.of(context).textTheme.headline3
+                                : Theme.of(context).textTheme.headline4,
+                          )),
+                    ),
+                  )),
+                  SizedBox(
+                    height: 25,
+                    width: 1,
+                    child: Container(
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
-                )),
-              ],
-            ),
-          );
+                  Expanded(
+                      child: GestureDetector(
+                    onTap: () {
+                      weekBloc.add(WeekEventPick(week: WeekItem.UNEVEN));
+                    },
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Нечетная",
+                          style: state.week == WeekItem.UNEVEN
+                              ? Theme.of(context).textTheme.headline3
+                              : Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                    ),
+                  )),
+                ],
+              ),
+            );
+          }
+          if (state is WeekStateLoading) {
+            return LoadingHorisontalWidget();
+          }
+          return Container();
         });
   }
 

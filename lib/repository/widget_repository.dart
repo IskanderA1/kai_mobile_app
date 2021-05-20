@@ -1,11 +1,9 @@
-
-
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:kai_mobile_app/model/weather_response.dart';
 const apiKeyWeather = '2e443cf7753349b195378473e6668eaf';
 const cityName = 'Kazan';
+
 class WidgetRepository {
   static String weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKeyWeather&units=metric";
   final Dio _dio = Dio();

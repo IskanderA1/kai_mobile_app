@@ -1,4 +1,4 @@
-import 'package:kai_mobile_app/model/semester_brs_model.dart';
+/*import 'package:kai_mobile_app/model/semester_brs_model.dart';
 
 class SemesterResponse {
   List<SemestrModel> semesters;
@@ -33,4 +33,4 @@ class SemesterResponseWithError extends SemesterResponse {
 
 class SemesterResponseLoading extends SemesterResponse {
   SemesterResponseLoading() : super.withError("");
-}
+}*/

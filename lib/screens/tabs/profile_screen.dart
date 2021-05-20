@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
-import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
-import 'package:kai_mobile_app/bloc/get_semester_bloc.dart';
-import 'package:kai_mobile_app/bloc/theme_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kai_mobile_app/bloc/get_semester/getsemester_bloc.dart';
+import 'package:kai_mobile_app/bloc/profile/profile_bloc.dart';
+import 'package:kai_mobile_app/bloc/theme/theme_bloc.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
-import 'package:kai_mobile_app/model/user_response.dart';
+import 'package:kai_mobile_app/model/user_model.dart';
 import 'package:kai_mobile_app/style/constant.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -14,19 +15,43 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // bool isDarkModeEnabled;
+  ThemeBloc themeBloc;
+  ProfileBloc profileBloc;
+  GetSemesterBloc getSemesterBloc;
+  int _semestersNum;
+  bool _isDarkMode = false;
+
   @override
   void initState() {
     super.initState();
-    // // ignore: unrelated_type_equality_checks
-    // if (themeBloc.itemStream == ThemeItem.LIGHT) {
-    //   isDarkModeEnabled = false;
-    //   // ignore: unrelated_type_equality_checks
-    // } else if (themeBloc.itemStream.last == ThemeItem.DARK) {
-    //   isDarkModeEnabled = true;
-    // } else {
-    //   isDarkModeEnabled = false;
-    // }
+    themeBloc = context.read<ThemeBloc>();
+    //BlocProvider.of<ThemeBloc>(context);
+    profileBloc = BlocProvider.of<ProfileBloc>(context);
+    getSemesterBloc = BlocProvider.of<GetSemesterBloc>(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getSemesterBloc.listen((state) {
+      if (state is GetSemesterStateLoaded) {
+        setState(() {
+          _semestersNum = state.semesters.length;
+        });
+      }
+    });
+
+    themeBloc.listen((state) {
+      if (state is ThemeStateDark) {
+        setState(() {
+          _isDarkMode = true;
+        });
+      } else if (state is ThemeStateLight) {
+        setState(() {
+          _isDarkMode = false;
+        });
+      }
+    });
   }
 
   @override
@@ -35,10 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onWillPop: () async {
         return false;
       },
-      child: StreamBuilder<UserResponse>(
-        stream: authBloc.subject.stream,
-        initialData: UserResponseLoading(),
-        builder: (context, AsyncSnapshot<UserResponse> snapshot) {
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
           /*switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return buildLoadingWidget();
@@ -64,18 +87,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return buildLoadingWidget();
               break;
           }*/
-          if (snapshot.data is UserResponseLoggedIn) {
-            return _profileScreenBuilder(context, snapshot);
-          } else {
-            return buildLoadingWidget();
+          if (state is ProfileStateLoading) {
+            return LoadingWidget();
+          } else if (state is ProfileStateAuthorized) {
+            return _profileScreenBuilder(context, state);
+          } else if (state is ProfileStateError) {
+            return Center(child: Text(state.error.toString()));
           }
+          return LoadingWidget();
         },
       ),
     );
   }
 
   Stack _profileScreenBuilder(
-      BuildContext context, AsyncSnapshot<UserResponse> snapshot) {
+      BuildContext context, ProfileStateAuthorized state) {
     return Stack(children: [
       Column(
         children: [
@@ -95,15 +121,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     _buildUserDataText(
                         label: "Институт:",
-                        userData: snapshot.data.user.instName,
+                        userData: state.user.instName,
                         icon: Icons.school),
                     _buildUserDataText(
                         label: "Специальность:",
-                        userData: snapshot.data.user.specName,
+                        userData: state.user.specName,
                         icon: Icons.menu_book),
                     _buildUserDataText(
                         label: "Номер группы:",
-                        userData: snapshot.data.user.groupNum,
+                        userData: state.user.groupNum,
                         icon: Icons.group),
                   ],
                 ),
@@ -129,13 +155,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     onTap: () {
-                      themeBloc.pickItem(true);
-                      authBloc
-                        ..authLogOut(
-                            getSemestrBloc.subject.value.semesters.length !=
-                                    null
-                                ? getSemestrBloc.subject.value.semesters.length
-                                : 0);
+                      themeBloc.add(ThemeEventChangeTheme(ThemeItem.LIGHT));
+                      profileBloc.add(ProfileEventLogout(
+                          semesterNum:
+                              (getSemesterBloc.state as GetSemesterStateLoaded)
+                                  .semesters
+                                  .length));
                     },
                   ),
                 ),
@@ -150,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             margin: EdgeInsets.only(left: 30, right: 30),
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width * 0.80,
-            child: _buildNameCard(snapshot.data),
+            child: _buildNameCard(state.user),
           ),
         ),
       ),
@@ -171,20 +196,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSwithcButton() {
-    return StreamBuilder(
-        stream: themeBloc.itemStream,
-        // ignore: missing_return
-        builder: (context, AsyncSnapshot<bool> snapshot) {
-          return DayNightSwitcher(
-            isDarkModeEnabled: snapshot.data == null ? true : !snapshot.data,
-            onStateChanged: (isDarkModeEnabled) {
-              themeBloc.pickItem(!isDarkModeEnabled);
-            },
-          );
-        });
+    return DayNightSwitcher(
+      isDarkModeEnabled: themeBloc.state is ThemeStateDark ? true : false,
+      onStateChanged: (isDarkModeEnabled) {
+        themeBloc.add(ThemeEventChangeTheme(
+            _isDarkMode ? ThemeItem.LIGHT : ThemeItem.DARK));
+      },
+    );
   }
 
-  Widget _buildNameCard(UserResponse userResponse) {
+  Widget _buildNameCard(UserModel user) {
     return Card(
       elevation: 1,
       child: Padding(
@@ -192,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(children: [
           Flexible(
             child: AutoSizeText(
-              userResponse.user.studFio,
+              user.studFio,
               style: Theme.of(context).textTheme.headline1,
               textAlign: TextAlign.center,
               minFontSize: 10,
@@ -203,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Flexible(
             child: AutoSizeText(
-              "Номер зачетки: ${userResponse.user.zach}",
+              "Номер зачетки: ${user.zach}",
               style: Theme.of(context).textTheme.subtitle1,
               textAlign: TextAlign.center,
               minFontSize: 6,

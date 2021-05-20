@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "315368002130",
-    "project_id": "mobile-kai",
-    "storage_bucket": "mobile-kai.appspot.com"
+    "project_number": "35834138897",
+    "project_id": "mobile-kai-dev",
+    "storage_bucket": "mobile-kai-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:315368002130:android:a28479d7a409d5b70c058b",
+        "mobilesdk_app_id": "1:35834138897:android:7fed663552aac9ababbcb0",
         "android_client_info": {
           "package_name": "com.iskander.kai_mobile_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "315368002130-fgd3s6g8en9sk2mlio421a8474tvrk1m.apps.googleusercontent.com",
+          "client_id": "35834138897-k3qt47qmrap70jp84qo36o5rtqjbfhff.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAgbM6TCGoXpHtXMv-TD_0Fqz1K8Li-2wI"
+          "current_key": "AIzaSyDoQsLoiFIjvoBxFjy5IfV49waoxBLwFhU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "315368002130-fgd3s6g8en9sk2mlio421a8474tvrk1m.apps.googleusercontent.com",
+              "client_id": "35834138897-k3qt47qmrap70jp84qo36o5rtqjbfhff.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

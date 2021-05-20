@@ -13,7 +13,7 @@ class OneLessonBRSResponse {
         error = "";
 
   OneLessonBRSResponse.withError(String errorValue)
-      : lessonsBRS = List(),
+      : lessonsBRS = List.empty(),
         error = errorValue;
 }
 
@@ -29,7 +29,6 @@ class OneLessonBRSResponseWithErrors extends OneLessonBRSResponse {
   OneLessonBRSResponseWithErrors(String err) : super.withError(err);
 }
 
-//////////////////////////
 class LessonsBRSResponsesList {
   List<OneLessonBRSResponse> lessonsBRSResponsesList;
   String error;
