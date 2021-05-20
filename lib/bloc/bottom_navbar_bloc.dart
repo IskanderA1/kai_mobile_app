@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 
-enum NavBarItem { NEWS, SERVICE, PROFILE }
+enum NavBarItem { NEWS, SERVICE, PORTFOLIO, PROFILE }
 
 class BottomNavBarBloc {
   final StreamController<NavBarItem> _navBarController =
@@ -21,7 +21,7 @@ class BottomNavBarBloc {
         _navBarController.sink.add(NavBarItem.SERVICE);
         break;
       case 2:
-        _navBarController.sink.add(NavBarItem.PROFILE);
+        _navBarController.sink.add(NavBarItem.PORTFOLIO);
         break;
       case 3:
         _navBarController.sink.add(NavBarItem.PROFILE);
