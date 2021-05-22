@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kai_mobile_app/bloc/auth_user_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kai_mobile_app/bloc/login/login_bloc.dart';
+import 'package:kai_mobile_app/bloc/profile/profile_bloc.dart';
 import 'package:kai_mobile_app/model/user_response.dart';
+import 'package:kai_mobile_app/repository/mobile_repository.dart';
+import 'package:kai_mobile_app/screens/tabs/profile_screen.dart';
 import 'package:kai_mobile_app/style/theme.dart' as Style;
 import 'package:kai_mobile_app/style/constant.dart';
 
@@ -13,6 +17,25 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final loginController = TextEditingController();
   final passController = TextEditingController();
+  LoginBloc loginBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loginBloc.listen((state) {
+      if (state is LoginStateAuthorized) {
+        context.read<ProfileBloc>().add(ProfileEventInitialize());
+        Future.delayed(
+            Duration(milliseconds: 300), () => Navigator.pop(context));
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -23,53 +46,55 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Style.Colors.mainColor,
-                ),
-              ),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
+    return Scaffold(
+      body: SafeArea(
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Style.Colors.mainColor,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'KaiMobile',
-                        style: TextStyle(
-                          color: Style.Colors.titleColor,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
+                ),
+                Container(
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 120.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'KaiMobile',
+                          style: TextStyle(
+                            color: Style.Colors.titleColor,
+                            fontFamily: 'OpenSans',
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildPasswordTF(),
-                      _buildWrong(),
-                      _buildLoginBtn(),
-                    ],
+                        SizedBox(height: 30.0),
+                        _buildEmailTF(),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        _buildPasswordTF(),
+                        _buildWrong(),
+                        _buildLoginBtn(),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -153,16 +178,14 @@ class _AuthScreenState extends State<AuthScreen> {
     return Container(
       height: 30.0,
       alignment: Alignment.bottomCenter,
-      child: StreamBuilder<UserResponse>(
-          stream: authBloc.subject.stream,
-          builder: (context, AsyncSnapshot<UserResponse> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data is UserResponseWithErrors) {
-                return Text(
-                  snapshot.data.error,
-                  style: kLabelStyle,
-                );
-              }
+      child: BlocBuilder<LoginBloc, LoginState>(
+          bloc: loginBloc,
+          builder: (context, LoginState state) {
+            if (state is LoginStateError) {
+              return Text(
+                state.error.toString(),
+                style: kLabelStyle,
+              );
             }
             return SizedBox();
           }),
@@ -177,7 +200,8 @@ class _AuthScreenState extends State<AuthScreen> {
         elevation: 5.0,
         onPressed: () {
           print(passController.text);
-          authBloc..auth(loginController.text, passController.text);
+          context.read<LoginBloc>().add(LoginEventLogin(
+              login: loginController.text, password: passController.text));
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(

@@ -1,4 +1,4 @@
-import 'dart:async';
+/*import 'dart:async';
 
 enum PortfMenuItems {
   Preview,
@@ -9,11 +9,11 @@ enum PortfMenuItems {
   Profile
 }
 
-class PortfolioBloc {
+class PortfolioNavigateBloc {
   final StreamController<PortfMenuItems> _portfolioController =
       StreamController<PortfMenuItems>.broadcast();
 
-  PortfMenuItems defaultItem = PortfMenuItems.Preview;
+  PortfMenuItems defaultItem = PortfMenuItems.Menu;
   Stream<PortfMenuItems> get itemStream => _portfolioController.stream;
 
   backToMenu() {
@@ -22,12 +22,11 @@ class PortfolioBloc {
 
   void pickItem(PortfMenuItems i) {
     _portfolioController.sink.add(i);
-    /*switch () {
+    /*switch (i) {
       case 0:
         _portfolioController.sink.add(PortfMenuItems.Menu);
         break;
       case 1:
-        serviceMenu.backToMenu();
         _portfolioController.sink.add(PortfMenuItems.NewAchiev);
         break;
       case 2:
@@ -50,4 +49,5 @@ class PortfolioBloc {
   }
 }
 
-PortfolioBloc portfolioBloc = PortfolioBloc();
+PortfolioNavigateBloc portfolioBloc = PortfolioNavigateBloc();
+*/

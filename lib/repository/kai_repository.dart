@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
 import 'package:kai_mobile_app/model/exams_response.dart';
 import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
+import 'package:kai_mobile_app/model/semester_brs_model.dart';
 import 'package:kai_mobile_app/model/semester_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/lessons_response.dart';
 
 class KaiRepository {
   static String mainUrl = "http://app.kai.ru/api";
@@ -100,6 +104,7 @@ class KaiRepository {
   // }
 
   Future<LessonsResponse> getLessons() async {
+    Hive.openBox("lessons");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var dataSP = prefs.getString("userData") != null
         ? jsonDecode(prefs.getString("userData"))
@@ -108,6 +113,17 @@ class KaiRepository {
         ? jsonDecode(prefs.getString("lessonsData"))
         : null;
     if (dataSP != null) {
+      LessonsResponse lResp =
+          Hive.box('lessons').get('lessons', defaultValue: null);
+      if (lResp != null) {
+        DateTime whenUpdated = Hive.box('lessons').get('lastUpdate');
+        DateTime now = DateTime.now();
+        int duration = now.difference(whenUpdated).inHours;
+        if (duration < 24) {
+          return LessonsResponseOk.fromList(lResp.lessons);
+        }
+      }
+
       print("${dataSP["stud_id"]}");
       var params = {
         "authToken": "{token}",
@@ -119,27 +135,31 @@ class KaiRepository {
             "}}",
       };
       try {
+        Response resp = await _dio.request(mainUrl, queryParameters: params);
+        print(resp.request.baseUrl);
         Response response = await _dio.get(mainUrl, queryParameters: params);
 
         var data = jsonDecode(response.data.replaceAll(RegExp(r"\\"), "/"));
         var rest = data["Data"] as List;
         if (rest.isNotEmpty) {
           print("${data["Data"][0]} test");
-          prefs.setString("lessonsData", jsonEncode(data));
-          return LessonsResponse.fromJson(data);
+          LessonsResponse lessons = LessonsResponse.fromJson(data);
+          Hive.box('lessons').put('lessons', lessons);
+          Hive.box('lessons').put('lastUpdate', DateTime.now());
+          return LessonsResponseOk.fromList(lessons.lessons);
         } else {
-          return LessonsResponse.withError("Авторизуйтесь");
+          return LessonsResponseError("Авторизуйтесь");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (lessonsSP != null) {
-          return LessonsResponse.fromJson(lessonsSP);
+          return LessonsResponseOk(lessonsSP);
         }
-        return LessonsResponse.withError("Авторизуйтесь");
+        return LessonsResponseError("Авторизуйтесь");
       }
     } else {
       print("Требуется авторизация");
-      return LessonsResponse.withError("Авторизуйтесь");
+      return LessonsResponseUnAuth();
     }
   }
 
@@ -187,7 +207,7 @@ class KaiRepository {
     }
   }
 
-  Future<SemesterResponse> getSemestr() async {
+  Future<List<SemestrModel>> getSemestr() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var dataSP = prefs.getString("userData") != null
         ? jsonDecode(prefs.getString("userData"))
@@ -213,20 +233,23 @@ class KaiRepository {
         if (rest.isNotEmpty) {
           print("${data["Data"][0]} Кол-во семестров");
           prefs.setString("semestr", jsonEncode(data["Data"][0]));
-          return SemesterResponseUserLoggedIn(data["Data"][0]);
+          return List<SemestrModel>.from((data["Data"])
+              .map((e) => SemestrModel.fromJson(e))
+              .toList());
         } else {
-          return SemesterResponseWithError("Нет данных");
+          throw Exception("Нет данных");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
         if (semestrSP != null) {
-          return SemesterResponseUserLoggedIn(semestrSP);
+          return List<SemestrModel>.from(
+              (semestrSP).map((e) => SemestrModel.fromJson(e)).toList());
         }
-        return SemesterResponseUserUnLogged();
+        throw Exception("Требуется авторизация");
       }
     } else {
       print("Требуется авторизация");
-      return SemesterResponseUserUnLogged();
+      throw Exception("Требуется авторизация");
     }
   }
 

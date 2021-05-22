@@ -11,9 +11,7 @@ class GetBRSOneLessonBloc {
 
   getBrsLessons() async {
     _subject.sink.add(OneLessonBRSResponseLoading());
-    OneLessonBRSResponse lResponse;
-    lResponse = await repository.getOneSemesterLessonsBRS(semesterNumber);
-    _subject.sink.add(lResponse);
+    repository.getOneSemesterLessonsBRS(semesterNumber).then((value) => _subject.sink.add(value));
   }
 
   dispose() {

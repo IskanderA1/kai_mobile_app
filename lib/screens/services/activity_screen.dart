@@ -55,7 +55,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           } else if (snapshot.hasError) {
             return Container();
           } else {
-            return buildLoadingWidget();
+            return LoadingWidget();
           }
         });
   }
