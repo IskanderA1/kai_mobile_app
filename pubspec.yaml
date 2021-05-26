@@ -24,7 +24,7 @@ dependencies:
   intl: ^0.16.1
   flutter_linkify: ^4.0.2
   image_picker: ^0.6.7+22
-  image_cropper: ^1.2.0
+  image_cropper: ^1.4.0
   socket_io_client: ^0.9.12
   day_night_switcher: ^0.1.1+1
   flutter_markdown: ^0.5.2
