@@ -1,4 +1,4 @@
-import 'dart:async';
+/* import 'dart:async';
 
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 
@@ -38,3 +38,4 @@ class BottomNavBarBloc {
 }
 
 final bottomNavBarBloc = BottomNavBarBloc();
+ */

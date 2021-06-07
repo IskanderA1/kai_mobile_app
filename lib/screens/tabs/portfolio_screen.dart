@@ -144,9 +144,12 @@ class PortfolioPreviewScreen extends StatelessWidget {
                             end: Alignment.topRight,
                             colors: colors)),
                   ),
-                  SvgPicture.asset(
-                    'assets/ArtProfile.svg',
-                    color: Colors.white,
+                  Align(
+                    child: SvgPicture.asset(
+                      'assets/objects.svg',
+                      color: Colors.white,
+                    ),
+                    alignment: Alignment.center
                   ),
                   Positioned(
                     top: 50,

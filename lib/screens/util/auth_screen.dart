@@ -28,11 +28,13 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loginBloc.listen((state) {
-      if (state is LoginStateAuthorized) {
+    loginBloc.stream.listen((state) {
+      if(mounted){
+        if (state is LoginStateAuthorized) {
         context.read<ProfileBloc>().add(ProfileEventInitialize());
         Future.delayed(
             Duration(milliseconds: 300), () => Navigator.pop(context));
+      }
       }
     });
   }

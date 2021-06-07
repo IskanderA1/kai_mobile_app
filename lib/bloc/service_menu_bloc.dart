@@ -35,6 +35,9 @@ class ServiceMenuBloc{
       case 7:
         _serviceItemController.sink.add(ServiceMenuItem.CONTROL);
         break;
+      case 7:
+        _serviceItemController.sink.add(ServiceMenuItem.CONTROL);
+        break;
       default:
         _serviceItemController.sink.add(ServiceMenuItem.MENU);
         break;

@@ -18,6 +18,8 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       yield* getUserTheme();
     } else if (event is ThemeEventChangeTheme) {
       yield* pickItem(event.item);
+    }else if(event is ThemeEventSwitch){
+      yield* switchTheme();
     }
   }
 
@@ -42,6 +44,14 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       }
     } else {
       yield ThemeStateLight();
+    }
+  }
+
+  Stream<ThemeState> switchTheme() async* {
+    if(this.state is ThemeStateDark){
+      yield ThemeStateLight();
+    }else{
+      yield ThemeStateDark();
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:kai_mobile_app/bloc/portfolio/portfolio_bloc.dart';
 import 'package:kai_mobile_app/model/event_model.dart';
 import 'package:kai_mobile_app/model/member_model.dart';
 import 'package:kai_mobile_app/screens/portfolio/portfolio_activity_adding_screen.dart';
+import 'package:kai_mobile_app/screens/portfolio/portfolio_info_screen.dart';
 
 class PortfolioAchievAddingScreen extends StatefulWidget {
   @override
@@ -39,7 +41,11 @@ class _PortfolioAchievAddingScreenState
   List<DropdownMenuItem<Member>> membersList;
   List<DropdownMenuItem<String>> levelsList;
 
-  int ammount;
+  double ammount;
+
+  bool sphereSelected = false;
+  bool levelSelected = false;
+  bool nameSelected = false;
 
   @override
   void initState() {
@@ -159,7 +165,8 @@ class _PortfolioAchievAddingScreenState
         .map((e) => DropdownMenuItem<Event>(
               child: Text(e.title),
               value: e,
-            )).toList();
+            ))
+        .toList();
     if (ammount != null) {
       _ammountController.text = '$ammount';
     } else {
@@ -226,6 +233,7 @@ class _PortfolioAchievAddingScreenState
                     value: _selectedActivitySphere,
                     onChanged: (String item) {
                       _selectedActivitySphere = item;
+                      sphereSelected = true;
                       sortBySphere(item);
                     },
                     hint: Text("Сфера деятельности"),
@@ -238,9 +246,10 @@ class _PortfolioAchievAddingScreenState
                   height: 40,
                   child: DropdownButton<String>(
                     isExpanded: true,
-                    items: levelsList,
+                    items: sphereSelected ? levelsList : [],
                     value: _selectedLevel,
                     onChanged: (String item) {
+                      levelSelected = true;
                       fillByLevel(item);
                     },
                     hint: Text("Уровень активности"),
@@ -254,9 +263,10 @@ class _PortfolioAchievAddingScreenState
                   child: DropdownButton<Event>(
                     isExpanded: true,
                     itemHeight: 70,
-                    items: eventsList,
+                    items: levelSelected ? eventsList : [],
                     value: _selectedEvent,
                     onChanged: (Event item) {
+                      nameSelected = true;
                       fillByEvent(item);
                     },
                     hint: Text("Название мероприятия"),
@@ -269,7 +279,7 @@ class _PortfolioAchievAddingScreenState
                   height: 40,
                   child: DropdownButton<Member>(
                     isExpanded: true,
-                    items: membersList,
+                    items: nameSelected ? membersList : [],
                     value: _selectedMember,
                     onChanged: (Member item) {
                       fillByMember(item);
@@ -286,13 +296,17 @@ class _PortfolioAchievAddingScreenState
                     focusNode: _focus,
                     controller: _ammountController,
                     onChanged: (String str) {
-                      ammount = int.parse(str);
+                      if (str.isEmpty) {
+                        ammount = 0.0;
+                      } else {
+                        ammount = double.parse(str);
+                      }
                     },
                     decoration: InputDecoration(
-                      labelText: "Начисляемыые баллы",
-                    ),
+                        labelText: "Начисляемыые баллы",
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        alignLabelWithHint: false),
                     keyboardType: TextInputType.number,
-                    maxLength: 2,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ),
@@ -305,6 +319,7 @@ class _PortfolioAchievAddingScreenState
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: "Комментарий",
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                     ),
                   ),
                 ),
@@ -366,9 +381,13 @@ class _PortfolioAchievAddingScreenState
                               color: Theme.of(context).accentColor,
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
-                              child: Text(
-                            "Добавить документ",
-                            style: Theme.of(context).textTheme.button,
+                              child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AutoSizeText(
+                              "Загрузить подтверждающий документ",
+                              presetFontSizes: [14, 12],
+                              style: Theme.of(context).textTheme.button,
+                            ),
                           )),
                         ),
                       ),
@@ -484,9 +503,16 @@ class _PortfolioAchievAddingScreenState
                                     value: portfolioBloc,
                                     child: PortfolioEventAddingScreen(),
                                   )));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BlocProvider.value(
+                                    value: portfolioBloc,
+                                    child: PortfolioInfoScreen(),
+                                  )));
                     },
                     child: Text(
-                      'Предложить мероприятие',
+                      'Добавить новое мероприятие',
                       style: TextStyle(color: Colors.red),
                     ))
               ],

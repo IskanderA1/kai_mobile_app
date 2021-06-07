@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kai_mobile_app/bloc/porfolio_menu_bloc.dart';
@@ -97,6 +98,9 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
     //ratings.removeWhere((element) => _currentUserId == element.userId.zachetNum);
   }
 
+  GlobalKey _globalKey = GlobalKey();
+  int initialInd = 0;
+
   @override
   void dispose() {
     /* portfolioSub.cancel(); */
@@ -116,6 +120,7 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
             },
             child: DefaultTabController(
                 length: 2,
+                initialIndex: initialInd,
                 child: BlocConsumer<PortfolioBloc, PortfolioState>(
                   listener: (ctx, state) {
                     if (state is PortfolioStateLoaded) {
@@ -177,7 +182,7 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
                         ),
                         body: TabBarView(children: [
                           _buildUserAchievs(state, ctx),
-                          _buildGlobalRating(state)
+                          _buildGlobalRating(state, ctx)
                         ]),
                       );
                     }
@@ -186,29 +191,44 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
                 ))));
   }
 
-  Widget _buildGlobalRating(PortfolioStateLoaded state) {
+  Widget _buildGlobalRating(PortfolioStateLoaded state, BuildContext ctx) {
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(top: 8, bottom: 8),
-            child: Card(
-              elevation: 3.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 32, 16),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(_profileState.user.studFio,
-                          style: Theme.of(context).primaryTextTheme.headline6),
-                      Spacer(),
-                      Text(_userRating != null ? '${_userRating.total}' : '_',
-                          style: Theme.of(context).primaryTextTheme.headline6)
-                    ],
+          InkWell(
+            onTap: () {
+              DefaultTabController.of(ctx).animateTo(0);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(top: 8, bottom: 8),
+              child: Card(
+                elevation: 3.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 32, 16),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: AutoSizeText(_profileState.user.studFio,
+                              presetFontSizes: [16, 14, 13, 12, 8],
+                              style:
+                                  Theme.of(context).primaryTextTheme.headline6),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                              _userRating != null
+                                  ? '${_userRating.total}'
+                                  : '_',
+                              style:
+                                  Theme.of(context).primaryTextTheme.headline6),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -221,37 +241,61 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
                   shrinkWrap: true,
                   itemCount: state.ratingList.length,
                   itemBuilder: (context, ind) {
-                    return Card(
-                      elevation: 3.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 32, 16),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(state.ratingList[ind].userId.name,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: _userRating.id ==
-                                              state.ratingList[ind].id
-                                          ? Theme.of(context).accentColor
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .button
-                                              .color)),
-                              Spacer(),
-                              Text('${state.ratingList[ind].total}',
-                                  style: TextStyle(
-                                      color: _userRating.id ==
-                                              state.ratingList[ind].id
-                                          ? Theme.of(context).accentColor
-                                          : Theme.of(context)
-                                              .textTheme
-                                              .button
-                                              .color))
-                            ],
+                    return InkWell(
+                      onTap: _userRating.id == state.ratingList[ind].id ? () {
+                        DefaultTabController.of(ctx).animateTo(0);
+                      } : null,
+                      child: Card(
+                        elevation: 3.0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 32, 16),
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                /*Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: Text("${ind + 1}",
+                                      style: TextStyle(
+                                          color: _userRating.id ==
+                                                  state.ratingList[ind].id
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .button
+                                                  .color)),
+                                ),*/
+                                Flexible(
+                                  child: AutoSizeText(
+                                      "${ind + 1}    ${state.ratingList[ind].userId.name}",
+                                      presetFontSizes: [14, 13, 12, 11],
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: _userRating.id ==
+                                                  state.ratingList[ind].id
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .button
+                                                  .color)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text('${state.ratingList[ind].total}',
+                                      style: TextStyle(
+                                          color: _userRating.id ==
+                                                  state.ratingList[ind].id
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .button
+                                                  .color)),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -327,30 +371,33 @@ class _PortfolioMenuScreenState extends State<PortfolioMenuScreen> {
         ),
         Positioned(
             bottom: 15,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 100),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BlocProvider.value(
-                                value: portfolioBloc,
-                                child: PortfolioAchievAddingScreen(),
-                              )));
-                },
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    height: 45,
-                    width: _size.width * 0.5,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).buttonColor,
-                        borderRadius: BorderRadius.circular(12)),
+            right: 80,
+            left: 80,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BlocProvider.value(
+                              value: portfolioBloc,
+                              child: PortfolioAchievAddingScreen(),
+                            )));
+              },
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  height: 45,
+                  //width: _size.width * 0.5,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).buttonColor,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text(
-                        "Добавить",
+                      child: AutoSizeText(
+                        "Добавить новое достижение",
+                        presetFontSizes: [16, 14, 13, 12],
                         style: TextStyle(fontSize: 16),
                       ),
                     ),

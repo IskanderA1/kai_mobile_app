@@ -19,7 +19,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ProfileBloc profileBloc;
   GetSemesterBloc getSemesterBloc;
   int _semestersNum;
-  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -33,22 +32,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getSemesterBloc.listen((state) {
+    getSemesterBloc.stream.listen((state) {
       if (state is GetSemesterStateLoaded) {
         setState(() {
           _semestersNum = state.semesters.length;
-        });
-      }
-    });
-
-    themeBloc.listen((state) {
-      if (state is ThemeStateDark) {
-        setState(() {
-          _isDarkMode = true;
-        });
-      } else if (state is ThemeStateLight) {
-        setState(() {
-          _isDarkMode = false;
         });
       }
     });
@@ -199,8 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return DayNightSwitcher(
       isDarkModeEnabled: themeBloc.state is ThemeStateDark ? true : false,
       onStateChanged: (isDarkModeEnabled) {
-        themeBloc.add(ThemeEventChangeTheme(
-            _isDarkMode ? ThemeItem.LIGHT : ThemeItem.DARK));
+        themeBloc.add(ThemeEventSwitch());
       },
     );
   }

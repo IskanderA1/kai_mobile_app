@@ -22,5 +22,15 @@ class ThemeEventChangeTheme extends ThemeEvent {
   List<Object> get props => [item];
 
   @override
-  String toString() => 'Theme initialize';
+  String toString() => 'Theme Change';
+}
+
+class ThemeEventSwitch extends ThemeEvent {
+  ThemeEventSwitch();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  String toString() => 'Theme Switch';
 }

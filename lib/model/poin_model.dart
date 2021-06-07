@@ -7,11 +7,11 @@ class Point {
     });
 
     String memberId;
-    int ammount;
+    double ammount;
 
     Point copyWith({
         String memberId,
-        int ammount,
+        double ammount,
     }) => 
         Point(
             memberId: memberId ?? this.memberId,
@@ -24,7 +24,7 @@ class Point {
 
     factory Point.fromMap(Map<String, dynamic> json) => Point(
         memberId: json["member_id"],
-        ammount: json["ammount"],
+        ammount: double.parse(json["ammount"].toString()),
     );
 
     Map<String, dynamic> toMap() => {

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kai_mobile_app/bloc/navigator/navigator_bloc.dart';
 import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
+import 'package:kai_mobile_app/style/service_icon_icons.dart';
 
 import 'package:kai_mobile_app/widgets/weather_widget.dart';
 import 'package:kai_mobile_app/widgets/week_widget.dart';
@@ -31,7 +35,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
                   child: GridView.builder(
                       scrollDirection: Axis.vertical,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 8,
+                      itemCount: 9,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3, childAspectRatio: 1),
                       itemBuilder: (context, index) {
@@ -41,10 +45,7 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
               ),
             ),
             Container(
-              child: Column(children: [
-                WeatherWidget(),
-                WeekWidget()
-              ]),
+              child: Column(children: [WeatherWidget(), WeekWidget()]),
             ),
           ],
         ),
@@ -106,6 +107,12 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         startColor = Color(0xFFB7B7B7);
         finishColor = Color(0xFF1F4C6A);
         break;
+      case 8:
+        icon = ServiceIcon.suitcase;
+        label = "Портфолио";
+        startColor = Color(0xFF9ed5fc);
+        finishColor = Color(0xFFd083f8);
+        break;
     }
     return InkWell(
       child: Container(
@@ -137,6 +144,9 @@ class _ServiceMenuScreenState extends State<ServiceMenuScreen> {
         ),
       ),
       onTap: () {
+        if(index == 8){
+          BlocProvider.of<NavigatorBloc>(context).add(NavigatorEventSelectTab(selectTab: 2));
+        }
         serviceMenu.pickItem(index);
       },
     );

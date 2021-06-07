@@ -62,10 +62,10 @@ class _PortfolioEventAddingScreenState
         child: Scaffold(
             appBar: AppBar(
               title: Text(
-                "Предложить пероприятие",
+                "Добавить новое мероприятие",
               ),
               centerTitle: true,
-              elevation: 0,
+              elevation: 3.0,
             ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(25, 25, 25, 20),
@@ -133,7 +133,7 @@ class _PortfolioEventAddingScreenState
                             ),
                           ),
                         ),
-                        Expanded(
+                        /*Expanded(
                           child: IconButton(
                             icon: Icon(
                               Icons.report,
@@ -179,7 +179,7 @@ class _PortfolioEventAddingScreenState
                                   );
                                 }),
                           ),
-                        )
+                        )*/
                       ],
                     )
                   ],

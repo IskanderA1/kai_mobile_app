@@ -38,7 +38,7 @@ class _MainTabScreenState extends State<MainTabScreen> {
   initBlocs() async {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
     navigatorBloc = BlocProvider.of<NavigatorBloc>(context);
-    navigatorBloc.listen((state) {
+    navigatorBloc.stream.listen((state) {
       int currentInd = state.selectedTab;
       if (_containers[currentInd] is Container) {
         this._containers[currentInd] = _getWidgetForIndex(currentInd);
@@ -52,7 +52,10 @@ class _MainTabScreenState extends State<MainTabScreen> {
         return NewsScreen();
         break;
       case 1:
-        return ServiceScreen();
+        return BlocProvider<NavigatorBloc>.value(
+          value: navigatorBloc,
+          child: ServiceScreen(),
+        );
         break;
       case 2:
         return PortfolioScreen();

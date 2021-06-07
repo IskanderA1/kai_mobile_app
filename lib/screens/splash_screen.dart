@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kai_mobile_app/bloc/day_week/dayweek_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_semester/getsemester_bloc.dart';
 import 'package:kai_mobile_app/bloc/login/login_bloc.dart';
@@ -49,11 +49,11 @@ class _SplashScreenState extends State<SplashScreen> {
     themeBloc = BlocProvider.of<ThemeBloc>(context);
     profileBloc = ProfileBloc(MobileRepository())
       ..add(ProfileEventInitialize());
-    themeBloc.listen((state) {
+    themeBloc.stream.listen((state) {
       print(state.toString());
     });
 
-    profileBloc.listen((state) {
+    profileBloc.stream.listen((state) {
       if (state is ProfileStateAuthorized) {
         print(state.toString());
       } else {
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     var newRoute = MaterialPageRoute(builder: (context) => _mainTabScreen());
-    Future.delayed(Duration(seconds: 1),
+    Future.delayed(Duration(seconds: 2),
         () => Navigator.pushReplacement(context, newRoute));
   }
 
@@ -110,9 +110,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: SpinKitRing(color: Theme.of(context).accentColor,) /*SvgPicture.asset('assets/Preview.svg')*/),
+        height: double.infinity,
+        width: double.infinity,
+        color: Color(0xF9F9F9F9),
+        child: SvgPicture.asset(
+          'assets/Preview.svg',
+          color: Color(0xFF1264af),
+        ),
+      ),
     );
   }
 }

@@ -41,6 +41,7 @@ class MobileRepository {
         prefs.setString("authToken", data["user"]["token"]["value"]);
         prefs.setString("userData", jsonEncode(data["user"]));
         //print(response.data);
+
         return UserResponseLoggedIn(data["user"]);
       } else {
         print("Неверный логин или пароль");
@@ -57,6 +58,7 @@ class MobileRepository {
     String login = prefs.getString("login");
     String password = prefs.getString("password");
     String authToken = prefs.getString("authToken");
+    print("AuthToken: $authToken");
     var dataSP = prefs.getString("userData") != null
         ? jsonDecode(prefs.getString("userData"))
         : null;
