@@ -89,8 +89,10 @@ class MobileRepository {
 
   Future<UserResponse> userLogOut(int semestrNum) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    for (int i = 1; i < semestrNum; i++) {
-      prefs.remove("brs$i");
+    if(semestrNum!=null){
+      for (int i = 1; i < semestrNum; i++) {
+        prefs.remove("brs$i");
+      }
     }
     prefs.remove("login");
     prefs.remove("password");

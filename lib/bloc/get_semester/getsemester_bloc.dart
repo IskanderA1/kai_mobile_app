@@ -30,7 +30,7 @@ class GetSemesterBloc extends Bloc<GetSemesterEvent, GetSemesterState> {
       final response = await _repository.getSemestr();
       yield GetSemesterStateLoaded(semesters: response);
     } catch (e) {
-      yield GetSemesterStateError(error: e);
+      yield GetSemesterStateError(error: e.toString());
     }
   }
 }

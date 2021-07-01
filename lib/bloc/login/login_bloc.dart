@@ -34,6 +34,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginStateNotAuthorized();
       }
     } catch (e) {
+      print('LoginStateError $e');
       yield LoginStateError(error: e);
     }
   }

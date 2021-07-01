@@ -1,12 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kai_mobile_app/bloc/day_bloc.dart';
 import 'package:kai_mobile_app/bloc/day_week/dayweek_bloc.dart';
 import 'package:kai_mobile_app/bloc/get_lessons_bloc.dart';
-import 'package:kai_mobile_app/bloc/service_menu_bloc.dart';
 import 'package:kai_mobile_app/bloc/week/week_bloc.dart';
-import 'package:kai_mobile_app/bloc/week_bloc.dart';
 import 'package:kai_mobile_app/elements/auth_button.dart';
 import 'package:kai_mobile_app/elements/loader.dart';
 import 'package:kai_mobile_app/elements/loader_horisont.dart';
@@ -140,66 +137,66 @@ class _LessonsScreenState extends State<LessonsScreen> {
   }
 
   Widget _buildWeekCheck() {
-    return BlocBuilder<WeekBloc, WeekState>(
-        builder: (context, state) {
-          if (state is WeekStateLoaded) {
-            return Container(
-              color: Theme.of(context).primaryColor,
-              height: 60,
-              child: Row(
-                children: [
-                  Expanded(
-                      child: GestureDetector(
-                    onTap: () {
-                      weekBloc.add(WeekEventPick(week: WeekItem.EVEN));
-                    },
-                    child: Container(
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Четная",
-                            style: state.week == WeekItem.EVEN
-                                ? Theme.of(context).textTheme.headline3
-                                : Theme.of(context).textTheme.headline4,
-                          )),
-                    ),
-                  )),
-                  SizedBox(
-                    height: 25,
-                    width: 1,
-                    child: Container(
-                      color: Theme.of(context).accentColor,
+    return BlocBuilder<WeekBloc, WeekState>(builder: (context, state) {
+      if (state is WeekStateLoaded) {
+        return Container(
+          color: Theme.of(context).primaryColor,
+          height: 60,
+          child: Row(
+            children: [
+              Expanded(
+                  child: GestureDetector(
+                onTap: () {
+                  weekBloc.add(WeekEventPick(week: WeekItem.EVEN));
+                },
+                child: Container(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Четная",
+                        style: state.week == WeekItem.EVEN
+                            ? Theme.of(context).textTheme.headline3
+                            : Theme.of(context).textTheme.headline4,
+                      )),
+                ),
+              )),
+              SizedBox(
+                height: 25,
+                width: 1,
+                child: Container(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+              Expanded(
+                  child: GestureDetector(
+                onTap: () {
+                  weekBloc.add(WeekEventPick(week: WeekItem.UNEVEN));
+                },
+                child: Container(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Нечетная",
+                      style: state.week == WeekItem.UNEVEN
+                          ? Theme.of(context).textTheme.headline3
+                          : Theme.of(context).textTheme.headline4,
                     ),
                   ),
-                  Expanded(
-                      child: GestureDetector(
-                    onTap: () {
-                      weekBloc.add(WeekEventPick(week: WeekItem.UNEVEN));
-                    },
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Нечетная",
-                          style: state.week == WeekItem.UNEVEN
-                              ? Theme.of(context).textTheme.headline3
-                              : Theme.of(context).textTheme.headline4,
-                        ),
-                      ),
-                    ),
-                  )),
-                ],
-              ),
-            );
-          }
-          if (state is WeekStateLoading) {
-            return LoadingHorisontalWidget();
-          }
-          return Container();
-        });
+                ),
+              )),
+            ],
+          ),
+        );
+      }
+      if (state is WeekStateLoading) {
+        return LoadingHorisontalWidget();
+      }
+      return Container();
+    });
   }
 
   Widget _buildLessonItem(LessonModel lesson) {
+    RegExp exp = RegExp(r"[^\w\s]+");
     return Padding(
       padding: const EdgeInsets.only(
         top: 8,
@@ -233,13 +230,14 @@ class _LessonsScreenState extends State<LessonsScreen> {
                             fontSize: 12,
                           ),
                         ),
-                        Text(
-                          "Ауд: ${lesson.audNum}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
+                        if (lesson.audNum.replaceAll(exp, '').isNotEmpty)
+                          Text(
+                            "Ауд: ${lesson.audNum.replaceAll(exp, '')}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),

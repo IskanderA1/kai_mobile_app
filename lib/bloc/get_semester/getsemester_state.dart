@@ -20,7 +20,7 @@ class GetSemesterStateLoaded extends GetSemesterState {
 
 class GetSemesterStateError extends GetSemesterState {
   GetSemesterStateError({this.error});
-  final Error error;
+  final String error;
 
   @override
   List<Object> get props => [error];

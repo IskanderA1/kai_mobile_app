@@ -7,13 +7,12 @@ import 'package:kai_mobile_app/model/group_mate_respose.dart';
 import 'package:kai_mobile_app/model/lesson_brs_response.dart';
 import 'package:kai_mobile_app/model/lessons_response.dart';
 import 'package:kai_mobile_app/model/semester_brs_model.dart';
-import 'package:kai_mobile_app/model/semester_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/lessons_response.dart';
 
 class KaiRepository {
-  static String mainUrl = "http://app.kai.ru/api";
+  static String mainUrl = "https://app.kai.ru/api";
   final Dio _dio = Dio();
 
   // Future<UserResponse> userAuth(String login, String password) async {
@@ -228,8 +227,11 @@ class KaiRepository {
       };
       try {
         Response response = await _dio.get(mainUrl, queryParameters: params);
+
         var data = jsonDecode(response.data);
         var rest = data["Data"] as List;
+        print("rest = $rest");
+
         if (rest.isNotEmpty) {
           print("${data["Data"][0]} Кол-во семестров");
           prefs.setString("semestr", jsonEncode(data["Data"][0]));
@@ -237,7 +239,7 @@ class KaiRepository {
               .map((e) => SemestrModel.fromJson(e))
               .toList());
         } else {
-          throw Exception("Нет данных");
+          throw Exception("Свервер вернул пустой список данных");
         }
       } catch (error, stacktrace) {
         print("Exception occured: $error stackTrace: $stacktrace");
@@ -245,7 +247,7 @@ class KaiRepository {
           return List<SemestrModel>.from(
               (semestrSP).map((e) => SemestrModel.fromJson(e)).toList());
         }
-        throw Exception("Требуется авторизация");
+        throw Exception(error);
       }
     } else {
       print("Требуется авторизация");

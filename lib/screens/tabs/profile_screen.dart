@@ -143,11 +143,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     onTap: () {
                       themeBloc.add(ThemeEventChangeTheme(ThemeItem.LIGHT));
-                      profileBloc.add(ProfileEventLogout(
-                          semesterNum:
-                              (getSemesterBloc.state as GetSemesterStateLoaded)
-                                  .semesters
-                                  .length));
+                      profileBloc.add(
+                        ProfileEventLogout(semesterNum: _semestersNum),
+                      );
                     },
                   ),
                 ),
