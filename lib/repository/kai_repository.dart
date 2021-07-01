@@ -208,6 +208,7 @@ class KaiRepository {
 
   Future<List<SemestrModel>> getSemestr() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('getSemestr');
     var dataSP = prefs.getString("userData") != null
         ? jsonDecode(prefs.getString("userData"))
         : null;

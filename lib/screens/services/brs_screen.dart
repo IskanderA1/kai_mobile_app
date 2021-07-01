@@ -21,6 +21,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getSemesterBloc = BlocProvider.of<GetSemesterBloc>(context);
+    getSemesterBloc.add(GetSemesterEventLoad());
   }
 
   @override
@@ -58,7 +59,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                       centerTitle: true,
                       bottom: TabBar(
                         labelColor: Theme.of(context).accentColor,
-                        tabs: state.semesters.map((SemestrModel semester) {
+                        tabs: state.semesters.reversed.map((SemestrModel semester) {
                           return Tab(
                             text: semester.semesterNum.toString(),
                           );
@@ -66,7 +67,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                       ),
                     ),
                     body: TabBarView(
-                      children: state.semesters.map((SemestrModel semester) {
+                      children: state.semesters.reversed.map((SemestrModel semester) {
                         return Column(
                           children: [
                             Expanded(
@@ -125,9 +126,10 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
               }
             });
       }
+      return Container();
     });
   }
-  
+
   /*Future<SemesterResponse> getSemesters() async {
     SemesterResponse resp = await getSemestrBloc.getSemestr();
     return resp;
@@ -271,7 +273,7 @@ class _BRSScreenState extends State<BRSScreen> with TickerProviderStateMixin {
                   fontSize: 16,
                   color: lessonBRSModel.finBall > 50
                       ? Colors.lightGreen
-                      : Theme.of(context).disabledColor,
+                      : Colors.black,
                 ),
               ),
             )
